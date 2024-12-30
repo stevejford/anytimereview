@@ -1,0 +1,1 @@
+export const WEBHOOK_URL = 'https://h.integrations-hub.com/wh/38/1lftnb3/2A1lPHaA3QTDGoQn69pg_RHJilfsH9dq-EbcXIsnOnk/';
