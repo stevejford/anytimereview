@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { useState } from 'react';
+import { User, Phone, Mail, Send, CheckCircle2 } from 'lucide-react';
 import { validateEmail, validatePhone, formatPhoneNumber } from '../utils/validation';
 import { addToHistory } from '../utils/storage';
-import History from './History';
-import { User, Phone, Mail, Send, Clock, Copy, CheckCircle2 } from 'lucide-react';
 
 interface Props {
   slug?: string;
@@ -17,8 +15,7 @@ interface FormData {
   email: string;
 }
 
-export default function ClientForm({ slug, webhookUrl: propWebhookUrl, businessName }: Props) {
-  const [activeTab, setActiveTab] = useState<'form' | 'history'>('form');
+export default function PublicForm({ slug, webhookUrl, businessName }: Props) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
@@ -26,31 +23,6 @@ export default function ClientForm({ slug, webhookUrl: propWebhookUrl, businessN
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [webhookUrl, setWebhookUrl] = useState<string | null>(propWebhookUrl || null);
-  const [localBusinessName, setBusinessName] = useState<string | undefined>(businessName);
-
-  useEffect(() => {
-    async function fetchFormDetails() {
-      if (propWebhookUrl || !slug) return;
-      try {
-        const { data, error } = await supabase
-          .from('client_forms')
-          .select('webhook_url, business_name')
-          .eq('slug', slug)
-          .single();
-
-        if (error) throw error;
-        setWebhookUrl(data.webhook_url);
-        if (!businessName) {
-          setBusinessName(data.business_name);
-        }
-      } catch (error) {
-        console.error('Error fetching form details:', error);
-      }
-    }
-
-    fetchFormDetails();
-  }, [slug, propWebhookUrl, businessName]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -85,10 +57,10 @@ export default function ClientForm({ slug, webhookUrl: propWebhookUrl, businessN
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, isResend = false) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    if (!isResend && !validateForm()) {
+    if (!validateForm()) {
       return;
     }
 
@@ -112,61 +84,30 @@ export default function ClientForm({ slug, webhookUrl: propWebhookUrl, businessN
         body: formDataToSend,
       });
 
-      if (!isResend) {
-        addToHistory(formData);
-      }
-      
+      addToHistory(formData);
       setSubmitStatus('success');
-      
-      if (!isResend) {
-        setFormData({ name: '', phone: '', email: '' });
-      }
+      setFormData({ name: '', phone: '', email: '' });
     } catch (error) {
       console.error('Error sending webhook:', error);
       setSubmitStatus('error');
     }
   };
 
-  const handleEdit = (client: FormData) => {
-    setFormData(client);
-    setActiveTab('form');
-  };
-
-  const handleResend = async (client: FormData) => {
-    setFormData(client);
-    const fakeEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
-    await handleSubmit(fakeEvent, true);
-  };
-
   return (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setActiveTab('form')}
-            className={`px-4 py-2 rounded-lg font-medium ${
-              activeTab === 'form'
-                ? 'bg-[#5861c5] text-white'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Form
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`px-4 py-2 rounded-lg font-medium ${
-              activeTab === 'history'
-                ? 'bg-[#5861c5] text-white'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            History
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900/95 to-gray-800/95 flex items-center justify-center">
+      <div className="w-full max-w-xl py-12 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-8">
+          {/* Welcome Message */}
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+              Welcome to {businessName || 'Our Business'}
+            </h1>
+            <p className="text-gray-600 text-lg">
+              We'd love to hear from you! Please fill out the form below and we'll respond as soon as possible.
+            </p>
+          </div>
 
-      {activeTab === 'form' ? (
-        <>
+          {/* Form Fields */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
@@ -272,10 +213,8 @@ export default function ClientForm({ slug, webhookUrl: propWebhookUrl, businessN
               </div>
             </div>
           )}
-        </>
-      ) : (
-        <History onEdit={handleEdit} onResend={handleResend} />
-      )}
+        </div>
+      </div>
     </div>
   );
-}
+} 

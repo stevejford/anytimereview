@@ -3,30 +3,34 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-export const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^\+61 \d \d{4} \d{4}$/;
-  return phoneRegex.test(phone);
-};
-
-export const formatPhoneNumber = (input: string): string => {
-  const cleaned = input.replace(/\D/g, '');
+export function validatePhone(phone: string): boolean {
+  // Remove all non-digit characters
+  const cleaned = phone.replace(/\D/g, '');
   
-  if (cleaned.length <= 9) {
+  // Check if it's a valid Australian number (with or without country code)
+  if (cleaned.length === 10 && cleaned.startsWith('0')) {
+    return true;
+  }
+  if (cleaned.length === 11 && cleaned.startsWith('61')) {
+    return true;
+  }
+  return false;
+}
+
+export function formatPhoneNumber(phone: string): string {
+  // Remove all non-digit characters
+  const cleaned = phone.replace(/\D/g, '');
+  
+  // If starts with 0, replace with 61
+  if (cleaned.startsWith('0')) {
+    return '61' + cleaned.slice(1);
+  }
+  
+  // If already starts with 61, return as is
+  if (cleaned.startsWith('61')) {
     return cleaned;
   }
   
-  let formatted = cleaned;
-  if (formatted.startsWith('0')) {
-    formatted = formatted.substring(1);
-  }
-  if (!formatted.startsWith('61')) {
-    formatted = '61' + formatted;
-  }
-  
-  const groups = formatted.match(/^(\d{2})(\d{1})(\d{4})(\d{4})$/);
-  if (groups) {
-    return `+${groups[1]} ${groups[2]} ${groups[3]} ${groups[4]}`;
-  }
-  
-  return cleaned;
-};
+  // Otherwise, assume it needs 61 prefix
+  return '61' + cleaned;
+}

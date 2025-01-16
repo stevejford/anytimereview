@@ -19,3 +19,13 @@ export const addToHistory = (entry: Omit<HistoryEntry, 'id' | 'date'>) => {
     console.error('Failed to save to history:', error);
   }
 };
+
+export const getHistory = (): HistoryEntry[] => {
+  try {
+    const stored = localStorage.getItem('clientHistory');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Failed to load history:', error);
+    return [];
+  }
+};

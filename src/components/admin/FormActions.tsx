@@ -1,46 +1,58 @@
 import React from 'react';
-import { Edit2, Copy, Trash2, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Copy, Edit, Trash2, FileText } from 'lucide-react';
 
 interface FormActionsProps {
   id: string;
   slug: string;
+  businessName: string;
+  webhookUrl: string;
   onEdit: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
 }
 
-export default function FormActions({ id, slug, onEdit, onDelete, onDuplicate }: FormActionsProps) {
+export default function FormActions({
+  id,
+  slug,
+  businessName,
+  webhookUrl,
+  onEdit,
+  onDelete,
+  onDuplicate,
+}: FormActionsProps) {
+  const actionButtonClass = "inline-flex items-center justify-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-all duration-200 group";
+  const iconClass = "w-5 h-5 transition-transform group-hover:scale-110";
+
   return (
-    <div className="flex items-center justify-end space-x-2">
-      <a
-        href={`/form/${slug}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-[#5861c5] hover:text-[#4951b5]"
-        title="Open form"
+    <div className="flex items-center justify-end gap-2">
+      <Link
+        to={`/admin/forms/${slug}`}
+        className={actionButtonClass}
+        title="View form"
       >
-        <ExternalLink className="h-4 w-4" />
-      </a>
+        <FileText className={iconClass} />
+      </Link>
       <button
         onClick={onEdit}
-        className="text-[#5861c5] hover:text-[#4951b5]"
-        title="Edit"
+        className={actionButtonClass}
+        title="Edit form"
       >
-        <Edit2 className="h-4 w-4" />
+        <Edit className={iconClass} />
       </button>
       <button
         onClick={onDuplicate}
-        className="text-[#5861c5] hover:text-[#4951b5]"
-        title="Duplicate"
+        className={actionButtonClass}
+        title="Duplicate form"
       >
-        <Copy className="h-4 w-4" />
+        <Copy className={iconClass} />
       </button>
       <button
-        onClick={() => onDelete(id)}
-        className="text-red-600 hover:text-red-900"
-        title="Delete"
+        onClick={onDelete}
+        className={actionButtonClass}
+        title="Delete form"
       >
-        <Trash2 className="h-4 w-4" />
+        <Trash2 className={`${iconClass} hover:text-red-600`} />
       </button>
     </div>
   );

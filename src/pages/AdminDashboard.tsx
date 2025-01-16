@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import FormsList from '../components/admin/FormsList';
 import FormEditor from '../components/admin/FormEditor';
 import AuthGuard from '../components/AuthGuard';
 import { ClientForm } from '../types/form-management';
 import { formatBusinessName } from '../utils/slug';
+import { getCurrentUser } from '../lib/auth';
 
 export default function AdminDashboard() {
   const [forms, setForms] = useState<ClientForm[]>([]);
@@ -44,6 +45,11 @@ export default function AdminDashboard() {
 
   const handleSave = async (formData: Omit<ClientForm, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
+      const user = await getCurrentUser();
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       const formattedBusinessName = formatBusinessName(formData.businessName);
       
       if (selectedForm) {
@@ -65,6 +71,7 @@ export default function AdminDashboard() {
             business_name: formattedBusinessName,
             webhook_url: formData.webhookUrl,
             slug: formData.slug,
+            user_id: user.id
           }]);
 
         if (error) throw error;
@@ -99,10 +106,15 @@ export default function AdminDashboard() {
               }
             }}
             onDuplicate={async (form) => {
+              const user = await getCurrentUser();
+              if (!user) {
+                throw new Error('User not authenticated');
+              }
               const newForm = {
                 business_name: `${formatBusinessName(form.businessName)} (Copy)`,
                 webhook_url: form.webhookUrl,
                 slug: `${form.slug}-copy`,
+                user_id: user.id
               };
               await supabase.from('client_forms').insert([newForm]);
               await loadForms();

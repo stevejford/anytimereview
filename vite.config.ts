@@ -10,6 +10,14 @@ export default defineConfig({
     port: 5173,
     host: true,
     strictPort: true,
+    hmr: {
+      overlay: true,
+      clientPort: 5173,
+    },
+    watch: {
+      usePolling: true,
+      interval: 100,
+    },
   },
   preview: {
     port: 5173,

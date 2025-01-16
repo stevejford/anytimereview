@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import ClientForm from '../components/ClientForm';
+import PublicForm from '../components/PublicForm';
 import { ClientForm as ClientFormType } from '../types/form-management';
 
 export default function DynamicForm() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [form, setForm] = useState<ClientFormType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,17 +16,33 @@ export default function DynamicForm() {
   }, [slug]);
 
   const loadForm = async () => {
+    if (!slug) {
+      setError('Form not found');
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('client_forms')
-        .select('*')
+        .select('business_name, webhook_url')
         .eq('slug', slug)
         .single();
 
       if (error) throw error;
-      setForm(data);
+      
+      if (!data) {
+        setError('Form not found');
+        return;
+      }
+
+      setForm({
+        businessName: data.business_name,
+        webhookUrl: data.webhook_url,
+        slug
+      } as ClientFormType);
     } catch (error) {
-      setError('Form not found');
+      setError(error instanceof Error ? error.message : 'Form not found');
     } finally {
       setLoading(false);
     }
@@ -40,11 +57,10 @@ export default function DynamicForm() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <ClientForm
-        webhookUrl={form.webhookUrl}
-        businessName={form.businessName}
-      />
-    </div>
+    <PublicForm
+      slug={slug}
+      businessName={form.businessName}
+      webhookUrl={form.webhookUrl}
+    />
   );
 }
