@@ -1,7 +1,7 @@
 # Support Macros (MVP)
 
 Usage
-- Replace variables like {{domain}}, {{rental_id}}, {{provider}}, {{ttl}}, {{target_url}}, {{invoice_id}}, {{amount}}.
+- Replace variables like {{domain}}, {{hire_id}}, {{provider}}, {{ttl}}, {{target_url}}, {{invoice_id}}, {{amount}}.
 - Link internal runbooks where noted.
 
 ---
@@ -67,8 +67,8 @@ Body:
 Hi {{name}},
 
 We’re seeing a 404 because the exact host/path is not mapped. Please:
-- Open your rental routes and confirm {{path}} exists and is published
-- For exclusive rentals, set apex and www targets
+- Open your hire routes and confirm {{path}} exists and is published
+- For exclusive hires, set apex and www targets
 - Use the link checker to validate the 3xx to {{target_url}}
 
 Reply if this still fails and we’ll investigate.
@@ -80,18 +80,18 @@ Subject: Which redirect code should I use?
 Body:
 Hi {{name}},
 
-Use 302 (temporary) for most campaign rentals. Choose 301 (permanent) only if you intend a permanent move contractually. See our Redirect Policy for details.
+Use 302 (temporary) for most campaign hires. Choose 301 (permanent) only if you intend a permanent move contractually. See our Redirect Policy for details.
 
 Links: docs/seo/redirect-policy.md
 
 ---
 
 BILLING-PERIOD-REFUND
-Subject: Refund request for {{rental_id}}
+Subject: Refund request for {{hire_id}}
 Body:
 Hi {{name}},
 
-Period rentals are billed monthly. Refunds are limited to platform‑caused downtime per SLA. If you experienced an outage, please share the time window and impact. We’ll review logs and follow up with options (credit or pro‑rata where applicable).
+Period hires are billed monthly. Refunds are limited to platform‑caused downtime per SLA. If you experienced an outage, please share the time window and impact. We’ll review logs and follow up with options (credit or pro‑rata where applicable).
 
 Links: docs/payments/disputes-and-credits.md
 
@@ -117,21 +117,21 @@ We couldn’t process your payment. Please update your payment method in Billing
 
 ---
 
-CANCEL-PERIOD-RENTAL
+CANCEL-PERIOD-HIRE
 Subject: Cancellation confirmation
 Body:
 Hi {{name}},
 
-Your rental will remain active through the current billing period and won’t renew next cycle. Routing stops at term end. You can resume any time by re‑activating.
+Your hire will remain active through the current billing period and won’t renew next cycle. Routing stops at term end. You can resume any time by re‑activating.
 
 ---
 
 IVT-DISPUTE-RECEIVED
-Subject: Click quality review started — {{rental_id}}
+Subject: Click quality review started — {{hire_id}}
 Body:
 Hi {{name}},
 
-Thanks for reporting your concern. We’ve started a review for {{rental_id}} covering {{date_range}}. We’ll analyze bot scores, ASN/geo anomalies, frequency caps, and referrer integrity. Expect an update within 3–5 business days.
+Thanks for reporting your concern. We’ve started a review for {{hire_id}} covering {{date_range}}. We’ll analyze bot scores, ASN/geo anomalies, frequency caps, and referrer integrity. Expect an update within 3–5 business days.
 
 Links: docs/trust-safety/ivt-policy.md
 

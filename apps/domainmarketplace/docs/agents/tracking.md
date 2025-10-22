@@ -70,6 +70,6 @@ DX Lead
 
 GTM & Support
 - [ ] gtm/owner-onboarding.md
-- [ ] gtm/renter-onboarding.md
+- [ ] gtm/hirer-onboarding.md
 - [ ] support/faq.md
 - [ ] support/macros.md

@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Domain Rental Marketplace API (MVP)
+  title: Domain Hire Marketplace API (MVP)
   version: 0.1.0
   description: |
-    MVP endpoints for domains, listings, rentals, routes, analytics, and billing.
+    MVP endpoints for domains, listings, hires, routes, analytics, and billing.
     Auth via Bearer JWT/session. Stripe webhooks verified by signature.
 servers:
   - url: https://api.example.com
@@ -51,19 +51,19 @@ components:
         pricePeriodCents: { type: integer, nullable: true }
         priceClickCents: { type: integer, nullable: true }
         status: { type: string, enum: [draft, active, paused] }
-    Rental:
+    Hire:
       type: object
       properties:
         id: { type: string, format: uuid }
         listingId: { type: string, format: uuid }
-        renterId: { type: string, format: uuid }
+        hirerId: { type: string, format: uuid }
         type: { type: string, enum: [period, per_click] }
         status: { type: string, enum: [active, ended, suspended] }
     Route:
       type: object
       properties:
         id: { type: string, format: uuid }
-        rentalId: { type: string, format: uuid }
+        hireId: { type: string, format: uuid }
         host: { type: string }
         path: { type: string }
         targetUrl: { type: string, format: uri }
@@ -243,9 +243,9 @@ paths:
                 status: { type: string, enum: [draft, active, paused] }
       responses:
         '200': { description: OK }
-  /api/rentals:
+  /api/hires:
     post:
-      summary: Create rental
+      summary: Create hire
       requestBody:
         required: true
         content:
@@ -257,21 +257,21 @@ paths:
                 listingId: { type: string }
                 type: { type: string, enum: [period, per_click] }
       responses:
-        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Rental' } } } }
-  /api/rentals/{id}:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Hire' } } } }
+  /api/hires/{id}:
     get:
-      summary: Get rental
+      summary: Get hire
       parameters:
         - in: path
           name: id
           required: true
           schema: { type: string }
       responses:
-        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Rental' } } } }
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Hire' } } } }
         '404': { description: Not Found }
-  /api/rentals/{id}/routes:
+  /api/hires/{id}/routes:
     get:
-      summary: List routes for rental
+      summary: List routes for hire
       parameters:
         - in: path
           name: id
@@ -286,7 +286,7 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/Route' }
     post:
-      summary: Add route to rental
+      summary: Add route to hire
       parameters:
         - in: path
           name: id
@@ -306,9 +306,9 @@ paths:
                 redirectCode: { type: integer, enum: [301, 302, 307, 308] }
       responses:
         '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Route' } } } }
-  /api/rentals/{id}/routes/{routeId}:
+  /api/hires/{id}/routes/{routeId}:
     patch:
-      summary: Update rental route
+      summary: Update hire route
       parameters:
         - in: path
           name: id
@@ -332,7 +332,7 @@ paths:
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Route' } } } }
     delete:
-      summary: Delete rental route
+      summary: Delete hire route
       parameters:
         - in: path
           name: id
@@ -344,9 +344,9 @@ paths:
           schema: { type: string }
       responses:
         '204': { description: No Content }
-  /api/rentals/{id}/routes/bulk:
+  /api/hires/{id}/routes/bulk:
     post:
-      summary: Bulk create rental routes
+      summary: Bulk create hire routes
       parameters:
         - in: path
           name: id
@@ -396,7 +396,7 @@ paths:
                       total: { type: integer }
                       created: { type: integer }
                       failed: { type: integer }
-  /api/rentals/{id}/analytics:
+  /api/hires/{id}/analytics:
     get:
       summary: Analytics summary
       parameters:
@@ -411,16 +411,16 @@ paths:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/AnalyticsSummary' } } } }
   /api/billing/period/checkout:
     post:
-      summary: Start period rental checkout
+      summary: Start period hire checkout
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [rentalId]
+              required: [hireId]
               properties:
-                rentalId: { type: string }
+                hireId: { type: string }
       responses:
         '200': { description: OK }
   /api/billing/usage/report:
@@ -432,9 +432,9 @@ paths:
           application/json:
             schema:
               type: object
-              required: [rentalId, clicks]
+              required: [hireId, clicks]
               properties:
-                rentalId: { type: string }
+                hireId: { type: string }
                 clicks: { type: integer }
       responses:
         '202': { description: Accepted }

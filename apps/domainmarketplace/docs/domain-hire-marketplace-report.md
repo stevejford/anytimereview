@@ -1,32 +1,32 @@
- # Campaign Domain Rental Marketplace — Research, MVP, Architecture, Risk, and Roadmap
+ # Campaign Domain hire Marketplace — Research, MVP, Architecture, Risk, and Roadmap
 
  Author: Stephen Ford • Date: 2025-10-18
 
  ## Executive Summary
- Your marketplace enables domain owners to rent entire domains (exclusive) or share them via path slugs to renters who want high‑relevance, “vanity” destinations without buying the domain. The platform provides: (a) listings and matching, (b) DNS onboarding and secure edge redirects, (c) click tracking and fraud controls, and (d) flexible monetization (per‑period or per‑click) with a 4% platform take.
+ Your marketplace enables domain owners to hire entire domains (exclusive) or share them via path slugs to hirers who want high‑relevance, “vanity” destinations without buying the domain. The platform provides: (a) listings and matching, (b) DNS onboarding and secure edge redirects, (c) click tracking and fraud controls, and (d) flexible monetization (per‑period or per‑click) with a 4% platform take.
 
  Recommended stack and approach:
  - Edge/DNS: Cloudflare for SaaS custom hostnames + Workers for routing/metrics; Domain Connect for one‑click DNS where available [1][2][3][4][5].
  - App: Next.js (App Router) with Neon Postgres + Prisma for core data; Workers KV/Durable Objects for fast routing state; Analytics Engine for click logs [6][8][9][10][27][28].
- - Payments: Stripe Connect. Per‑period rentals via Direct Charges (owner pays Stripe fees; platform collects 4% app fee). Per‑click via platform‑billed usage (Stripe Billing meters) with periodic transfers to owners; 4% platform margin [11][12][13][14][15].
+ - Payments: Stripe Connect. Per‑period hires via Direct Charges (owner pays Stripe fees; platform collects 4% app fee). Per‑click via platform‑billed usage (Stripe Billing meters) with periodic transfers to owners; 4% platform margin [11][12][13][14][15].
  - Fraud & Abuse: Cloudflare WAF/Bot Management/Turnstile; IAB Spiders & Bots List; MRC IVT guidance; rate‑limits/dedup at edge [7][22][23][24].
- - SEO: 302/307 for temporary rentals; 301/308 for true permanent moves; canonical controls by contract type [16].
+ - SEO: 302/307 for temporary hires; 301/308 for true permanent moves; canonical controls by contract type [16].
  - Legal: UDRP awareness; DMCA designated agent; TOS/AUP; US Section 230 posture [17][18][20][21][19].
 
  Outcome: MVP can be delivered rapidly with Cloudflare + Neon + Stripe while preserving scale‑out pathways for high‑volume clickstream.
 
  ## Scope and Assumptions
  - Users: creators, marketers, agencies, SMBs, enterprises (both B2B/B2C).
- - Hosting: Marketplace provides listing, DNS onboarding, and redirect/routing; renters host their own landing pages; renters can also create and manage shortlinks (path slugs) under rented domains.
+ - Hosting: Marketplace provides listing, DNS onboarding, and redirect/routing; hirers host their own landing pages; hirers can also create and manage shortlinks (path slugs) under hireed domains.
  - Domain integration: Prefer Cloudflare for SaaS custom hostnames; additionally support Domain Connect across registrars for one‑click DNS updates where available [1][2][3][4][5].
- - Rental modes: (a) Exclusive apex/domain, optionally sell at term end; (b) Shared via path slugs under a domain, assigned to multiple renters concurrently.
- - Pricing: Owners can set period rental price and/or per‑click price; platform fee fixed at 4%.
+ - hire modes: (a) Exclusive apex/domain, optionally sell at term end; (b) Shared via path slugs under a domain, assigned to multiple hirers concurhirely.
+ - Pricing: Owners can set period hire price and/or per‑click price; platform fee fixed at 4%.
  - Payments: Stripe Connect (Express/Standard), USD to start.
  - Tech preferences: Next.js + Neon + Cloudflare; research validated below; recommended as MVP baseline.
 
- ## Market Landscape and Differentiation
+ ## Market Landscape and Diffehireiation
  - Domain Parking (Bodis, ParkingCrew, Sedo, Namecheap overview): monetizes with ads; owners split ad PPC revenue; typically requires nameserver change and shows ad landers [25]. Your model monetizes the domain itself as a campaign destination, not ads.
- - Rank‑and‑Rent: SEOers rank sites then lease to local businesses for leads [26]. Your model productizes domain relevance (and optionally authority) for campaigns without needing you to rank/host the site.
+ - Rank‑and‑hire: SEOers rank sites then lease to local businesses for leads [26]. Your model productizes domain relevance (and optionally authority) for campaigns without needing you to rank/host the site.
  - Unique position: “Airbnb for domains” at the campaign level—self‑serve, time‑boxed, exclusive or shared path slugs, multiple pricing modes, with low‑friction DNS onboarding.
 
  ## MVP Feature Set
@@ -35,14 +35,14 @@
  - DNS onboarding flow: (a) Cloudflare for SaaS custom hostnames; (b) Domain Connect when supported; (c) fallback manual A/ALIAS/CNAME instructions [1][2][3][4][5].
  - Payouts: Stripe Connect onboarding; tax/KYC; payout schedule and reporting.
 
- 2) Renter portal
+ 2) hirer portal
  - Search/browse by keyword/vertical/geo; view domain metrics, policies, and pricing.
- - Rent exclusive (entire domain) or reserve slugs (e.g., example.com/offer, /john, /city); manage target URLs and UTM; bulk upload slugs; link health and analytics.
+ - hire exclusive (entire domain) or reserve slugs (e.g., example.com/offer, /john, /city); manage target URLs and UTM; bulk upload slugs; link health and analytics.
  - Billing choices: period (prepaid) or metered per‑click; card on file; top‑ups.
 
  3) Edge routing and analytics
  - Hostname + path routing table at the edge; 301/302 policy per contract; redirects with signed link IDs.
- - Click measurement: human‑filtered unique clicks; geo/device/referrer; timestamped; renter‑visible analytics [7][8][9][10][22][24].
+ - Click measurement: human‑filtered unique clicks; geo/device/referrer; timestamped; hirer‑visible analytics [7][8][9][10][22][24].
 
  4) Trust & Safety
  - AUP/TOS enforcement; category blocklists; abuse reporting; automated bot filtering and rate limits; appeal workflow [7][22][24].
@@ -52,17 +52,17 @@
 
  ## Pricing and Payments Design (4% platform share)
  Two complementary flows with Stripe Connect:
- - Period rentals (exclusive or slug bundles): Direct Charges on the owner’s connected account with `application_fee_amount = 4%` to the platform. Owner bears Stripe fees; platform receipts are fee‑free on app fee [13].
- - Per‑click rentals (shared or exclusive): Platform bills renters on usage using Stripe Billing meters; at cycle end, transfer gross proceeds minus platform fee to owners via Connect Transfers (“collect then transfer”) [12][14][15].
+ - Period hires (exclusive or slug bundles): Direct Charges on the owner’s connected account with `application_fee_amount = 4%` to the platform. Owner bears Stripe fees; platform receipts are fee‑free on app fee [13].
+ - Per‑click hires (shared or exclusive): Platform bills hirers on usage using Stripe Billing meters; at cycle end, transfer gross proceeds minus platform fee to owners via Connect Transfers (“collect then transfer”) [12][14][15].
 
  Notes and rationale
- - Direct Charges fit “owner is merchant of record” for fixed rentals with predictable amounts, aligning Stripe fees to the owner side [13].
+ - Direct Charges fit “owner is merchant of record” for fixed hires with predictable amounts, aligning Stripe fees to the owner side [13].
  - Usage billing avoids per‑click micro‑charges by aggregating click events into monthly invoices; supports tiered pricing (graduated) if desired [14][15].
  - For cross‑region cases, follow `on_behalf_of` and settlement‑merchant rules when applicable [11].
 
  ## Click Tracking and Fraud Controls
  - Measurement pipeline
-   - At redirect edge (Cloudflare Worker): resolve host+path → target; write click event (host, path, renterId, ownerId, ip hash, UA, referrer, CF bot score, geo, timestamp) to Analytics Engine; async dedup (e.g., H(ip/16 + UA + target, 24h)) and finalize counts [8][9][10].
+   - At redirect edge (Cloudflare Worker): resolve host+path → target; write click event (host, path, hirerId, ownerId, ip hash, UA, referrer, CF bot score, geo, timestamp) to Analytics Engine; async dedup (e.g., H(ip/16 + UA + target, 24h)) and finalize counts [8][9][10].
    - Enrich with bot signals (Cloudflare Bot Management), WAF rules, Turnstile on suspicious sequences [7].
    - Exclude known crawlers with IAB Spiders & Bots list; adhere to MRC IVT practices favoring back‑end filtration; add data‑center IP exclusions [22][23][24].
  - Heuristics
@@ -76,9 +76,9 @@
  - System of record: Neon (Postgres) for contracts, accounts, invoices/payouts, disputes [27][28].
 
  ## SEO Strategy and Redirect Semantics
- - Temporary rentals: 302/307 from rented domain/slug to renter page; signals canonical weakly; avoids unintended equity transfer [16].
- - Permanent/exclusive rentals: 301/308 only when contractually “permanent”; stronger canonicalization; document site‑move expectations [16].
- - Micro‑pages (future option): if hosting a lander, emit `rel=canonical` to renter’s primary URL; provide `robots` controls per contract.
+ - Temporary hires: 302/307 from hireed domain/slug to hirer page; signals canonical weakly; avoids unintended equity transfer [16].
+ - Permanent/exclusive hires: 301/308 only when contractually “permanent”; stronger canonicalization; document site‑move expectations [16].
+ - Micro‑pages (future option): if hosting a lander, emit `rel=canonical` to hirer’s primary URL; provide `robots` controls per contract.
 
  ## Domain Onboarding and DNS
  - Preferred: Cloudflare for SaaS “custom hostnames.” Owner adds CNAME to your zone CNAME‑target; Cloudflare automates TLS and proxies traffic to your edge [3][4].
@@ -98,8 +98,8 @@
  ## Technical Architecture
  - App: Next.js (App Router) on Vercel or Cloudflare Pages. Neon Postgres + Prisma for core data; Auth.js optional; Resend for email (org standard).
  - Edge: Cloudflare Worker handles host/path routing, redirect status policy, and analytics writes. KV for hot routes; Durable Objects for atomic updates/contention [6][10].
- - Analytics: Workers Analytics Engine for click telemetry; nightly ETL aggregates to owner/renter dashboards and Stripe usage meters [8][9].
- - Payments: Stripe Connect (Direct Charges for period rentals; Billing meters + Transfers for per‑click).
+ - Analytics: Workers Analytics Engine for click telemetry; nightly ETL aggregates to owner/hirer dashboards and Stripe usage meters [8][9].
+ - Payments: Stripe Connect (Direct Charges for period hires; Billing meters + Transfers for per‑click).
 
  ```mermaid
  flowchart LR
@@ -118,21 +118,21 @@
  - Click inflation/IVT → IAB list, MRC back‑end filtration, Cloudflare bot scores, dedup rules, audits, clawbacks [22][23][24].
  - SEO expectations → Contractual redirect policy (temporary vs permanent), explicit no guarantees; canonical guidance [16].
  - DNS onboarding friction → Domain Connect support; Cloudflare for SaaS with pre‑validation; rich guides [1][3][5].
- - Payments/chargebacks → Usage invoices with dispute windows; holdbacks/reserves for new renters; refunds tooling [12][14].
+ - Payments/chargebacks → Usage invoices with dispute windows; holdbacks/reserves for new hirers; refunds tooling [12][14].
  - Legal disputes (UDRP/DMCA) → Takedown/hold workflows; registered DMCA agent; counsel escalation [17][20].
 
  ## Unit Economics (illustrative)
- - Per‑click: Renter price $1.00/click; 1,000 valid clicks → $1,000 gross. Platform 4% = $40. Owner payout = $960 minus Stripe processing (depending on flow; with platform‑billed usage + transfer, Stripe fee borne by platform; with direct charges the owner bears fees) [11][12][13].
- - Period: $500/month exclusive rental. Platform takes $20 via application fee (Direct Charge). Owner net = $500 − Stripe fees (charged to owner) − $20 app fee [13].
+ - Per‑click: hirer price $1.00/click; 1,000 valid clicks → $1,000 gross. Platform 4% = $40. Owner payout = $960 minus Stripe processing (depending on flow; with platform‑billed usage + transfer, Stripe fee borne by platform; with direct charges the owner bears fees) [11][12][13].
+ - Period: $500/month exclusive hire. Platform takes $20 via application fee (Direct Charge). Owner net = $500 − Stripe fees (charged to owner) − $20 app fee [13].
 
  ## Go‑to‑Market
  - Supply (owners): Domain investor forums, marketplaces (Sedo/Afternic), portfolio APIs; offer higher liquidity vs parking; easy DNS onboarding; early‑adopter reduced fee tier.
- - Demand (renters): Performance marketers, agencies, SMB lead‑gen; integrations with link managers; free trials for slug‑only rentals; simple analytics.
+ - Demand (hirers): Performance marketers, agencies, SMB lead‑gen; integrations with link managers; free trials for slug‑only hires; simple analytics.
  - Liquidity: Start with verticals (home services, legal, healthcare), geographic niches, and exact‑match terms.
 
  ## Implementation Roadmap
- - Phase 0 (1–2 weeks): Data model; Stripe Connect onboarding; Cloudflare for SaaS setup; basic Worker with host/path → redirect; Neon schema; Prisma scaffolding; owner/renter auth.
- - Phase 1 (3–5 weeks): Owner listing + DNS onboarding flows (custom hostname + pre‑validation); renter search and booking; Direct Charges for period; KV routing; basic analytics; AUP/TOS; DMCA agent registration.
+ - Phase 0 (1–2 weeks): Data model; Stripe Connect onboarding; Cloudflare for SaaS setup; basic Worker with host/path → redirect; Neon schema; Prisma scaffolding; owner/hirer auth.
+ - Phase 1 (3–5 weeks): Owner listing + DNS onboarding flows (custom hostname + pre‑validation); hirer search and booking; Direct Charges for period; KV routing; basic analytics; AUP/TOS; DMCA agent registration.
  - Phase 2 (4–6 weeks): Per‑click metered billing (Stripe Billing meters); Analytics Engine aggregation; IVT filtration (IAB list integration workflow); admin disputes; automated payouts; rate‑limits/Turnstile triggers.
  - Phase 3 (2–4 weeks): Advanced pricing tiers; offer‑to‑buy workflow at term end; dashboards; marketing site; SOC2‑friendly logging policy.
 
@@ -162,7 +162,7 @@
  23. IAB Spiders & Bots List Best Practices (PDF) [https://www.iab.com/wp-content/uploads/2019/06/IAB_SpidersBots_Best_Practices_2019.pdf]
  24. MRC IVT Requirements (statement) [https://mediaratingcouncil.org/sites/default/files/News/MRC%20Statement%20on%20pre%20bid%20IVT%20requirements%20and%20processes.pdf]
  25. Namecheap: What is domain parking (overview) [https://www.namecheap.com/blog/what-is-domain-parking/]
-26. Diggity Marketing: Rank & Rent Guide [https://diggitymarketing.com/rank-and-rent/]
+26. Diggity Marketing: Rank & hire Guide [https://diggitymarketing.com/rank-and-hire/]
 
 ---
 
@@ -173,19 +173,19 @@ This section converts the research above into a concrete, execution-ready MVP gu
 ## 1) Goals, Non‑Goals, Assumptions
 
 - Goals
-  - Enable owners to list domains and start earning via rentals (period or per‑click) with low DNS friction.
-  - Enable renters to discover, rent, and route traffic from domains or slugs with trustworthy analytics and billing.
+  - Enable owners to list domains and start earning via hires (period or per‑click) with low DNS friction.
+  - Enable hirers to discover, hire, and route traffic from domains or slugs with trustworthy analytics and billing.
   - Establish a secure, auditable foundation for payouts, disputes, and abuse handling.
 
 - Non‑Goals (MVP)
-  - No registrar transfer or ownership change; this is rentals only.
+  - No registrar transfer or ownership change; this is hires only.
   - No multi‑currency or multi‑region tax engines; start with USD and Stripe defaults.
-  - No hosted site builder; renters point to their own destinations.
+  - No hosted site builder; hirers point to their own destinations.
   - No complex auctions; fixed price with optional offers is sufficient later.
 
 - Assumptions
   - DNS integration via Cloudflare for SaaS with pre‑validation; Domain Connect where available; manual fallback.
-  - Stripe Connect Express for owners; Stripe Billing for usage metering; Direct Charges for fixed rentals.
+  - Stripe Connect Express for owners; Stripe Billing for usage metering; Direct Charges for fixed hires.
   - Next.js app with Neon Postgres; Cloudflare Worker for routing and click measurement.
 
 ## 2) Personas and JTBD
@@ -201,8 +201,8 @@ This section converts the research above into a concrete, execution-ready MVP gu
 
 ## 3) Core User Journeys (MVP)
 
-- Owner onboarding: sign up → Connect Stripe → add domain → DNS onboarding → set pricing → publish listing → start receiving rentals.
-- Renter booking: search → view listing → checkout (period or per‑click) → configure target URL(s) → traffic flows → analytics → renewal/cancel.
+- Owner onboarding: sign up → Connect Stripe → add domain → DNS onboarding → set pricing → publish listing → start receiving hires.
+- hirer booking: search → view listing → checkout (period or per‑click) → configure target URL(s) → traffic flows → analytics → renewal/cancel.
 - Admin moderation: review new listings → approve/suspend → review IVT and disputes → process refunds/credits.
 
 ## 4) Feature Requirements and Acceptance Criteria
@@ -215,16 +215,16 @@ This section converts the research above into a concrete, execution-ready MVP gu
   - Stripe onboarding and payouts
     - Accept: Owner completes Connect onboarding; status must be `charges_enabled` before receiving funds.
   - Listing lifecycle
-    - Accept: Owner can pause/unpublish; active rentals remain until term end; new bookings disabled.
+    - Accept: Owner can pause/unpublish; active hires remain until term end; new bookings disabled.
 
-- Renter
+- hirer
   - Discovery and details
     - Accept: Search by keyword/vertical/geo; listing page shows price(s), availability, allowed categories, sample traffic/SEO notes.
   - Checkout
-    - Period rentals: Accept fixed price, set start date, card capture, invoice/receipt; contract created.
+    - Period hires: Accept fixed price, set start date, card capture, invoice/receipt; contract created.
     - Per‑click: Start plan; card capture; usage is billed monthly; clear display of rate and fraud policy.
   - Configure routing
-    - Accept: For exclusive rentals, set redirect policy (301/302) and target URL for apex and common hostnames (www). For slug rentals, create one or more slugs mapping to URLs.
+    - Accept: For exclusive hires, set redirect policy (301/302) and target URL for apex and common hostnames (www). For slug hires, create one or more slugs mapping to URLs.
   - Analytics
     - Accept: Clicks shown with dedup rules; show geo/device/referrer counts; export CSV.
 
@@ -240,7 +240,7 @@ This section converts the research above into a concrete, execution-ready MVP gu
 
 - Public: Home, Browse/Search, Listing details, About/Fees, TOS/AUP/Privacy.
 - Owner: Dashboard, Domains, Listings, Payouts, Settings (KYC), Support.
-- Renter: Dashboard, Rentals, Slugs, Analytics, Billing, Support.
+- hirer: Dashboard, hires, Slugs, Analytics, Billing, Support.
 - Admin: Review Queue, Abuse/Disputes, Finance, System Health.
 
 ## 6) Data Model (Initial)
@@ -252,7 +252,7 @@ High‑level entities and key fields. Pseudocode DDL for clarity.
 create table users (
   id uuid primary key default gen_random_uuid(),
   email text unique not null,
-  role text not null check (role in ('owner','renter','admin')),
+  role text not null check (role in ('owner','hirer','admin')),
   created_at timestamptz not null default now()
 );
 
@@ -287,11 +287,11 @@ create table listings (
   status text not null default 'draft' -- draft|active|paused
 );
 
--- Rentals and Routes
-create table rentals (
+-- hires and Routes
+create table hires (
   id uuid primary key default gen_random_uuid(),
   listing_id uuid not null references listings(id),
-  renter_id uuid not null references users(id),
+  hirer_id uuid not null references users(id),
   type text not null check (type in ('period','per_click')),
   status text not null default 'active', -- active|ended|suspended
   start_at timestamptz not null default now(),
@@ -300,18 +300,18 @@ create table rentals (
 
 create table routes (
   id uuid primary key default gen_random_uuid(),
-  rental_id uuid not null references rentals(id),
+  hire_id uuid not null references hires(id),
   host text not null, -- e.g., apex or www
   path text not null default '/',
   target_url text not null,
   redirect_code int not null default 302,
-  unique (rental_id, host, path)
+  unique (hire_id, host, path)
 );
 
 -- Billing
 create table invoices (
   id uuid primary key default gen_random_uuid(),
-  rental_id uuid references rentals(id),
+  hire_id uuid references hires(id),
   stripe_invoice_id text,
   amount_cents int not null,
   type text not null check (type in ('period','usage')),
@@ -330,17 +330,17 @@ create table payouts (
 -- Analytics (rolled-up); raw click events stay in Analytics Engine
 create table click_rollups (
   day date not null,
-  rental_id uuid not null references rentals(id),
+  hire_id uuid not null references hires(id),
   valid_clicks int not null default 0,
   invalid_clicks int not null default 0,
-  primary key (day, rental_id)
+  primary key (day, hire_id)
 );
 
 -- Disputes
 create table disputes (
   id uuid primary key default gen_random_uuid(),
-  rental_id uuid references rentals(id),
-  claimant_role text check (claimant_role in ('owner','renter')),
+  hire_id uuid references hires(id),
+  claimant_role text check (claimant_role in ('owner','hirer')),
   reason text,
   status text not null default 'open'
 );
@@ -361,18 +361,18 @@ Representative HTTP endpoints and shapes. Auth via session/JWT; all webhooks sig
   - GET `/api/listings/{id}`
   - GET `/api/listings?search=...`
 
-- Rentals
-  - POST `/api/rentals` { listingId, type }
-  - GET `/api/rentals/{id}`
-  - POST `/api/rentals/{id}/routes` { host, path, targetUrl, redirectCode }
-  - GET `/api/rentals/{id}/analytics?range=30d`
+- hires
+  - POST `/api/hires` { listingId, type }
+  - GET `/api/hires/{id}`
+  - POST `/api/hires/{id}/routes` { host, path, targetUrl, redirectCode }
+  - GET `/api/hires/{id}/analytics?range=30d`
 
 - Billing
-  - POST `/api/billing/period/checkout` { rentalId }
-  - POST `/api/billing/usage/report` (internal job) { rentalId, clicks }
+  - POST `/api/billing/period/checkout` { hireId }
+  - POST `/api/billing/usage/report` (internal job) { hireId, clicks }
   - POST `/api/webhooks/stripe` (verify signature)
 
-Sample response: GET `/api/rentals/{id}`
+Sample response: GET `/api/hires/{id}`
 ```json
 {
   "id": "rntl_123",
@@ -405,13 +405,13 @@ Sample response: GET `/api/rentals/{id}`
 
 ## 9) Payments Sequences
 
-- Period rental (Direct Charges)
-  1) Renter checkout → PaymentIntent on owner’s connected account with `application_fee_amount=4%`.
+- Period hire (Direct Charges)
+  1) hirer checkout → PaymentIntent on owner’s connected account with `application_fee_amount=4%`.
   2) On success, create contract; schedule renewal; send receipt.
   3) Owner payout per Stripe schedule; platform collects app fee.
 
 - Per‑click (usage)
-  1) Renter starts plan → create Subscription with metered price.
+  1) hirer starts plan → create Subscription with metered price.
   2) Nightly job records usage from Analytics rollups to Stripe.
   3) Invoice finalizes monthly; platform transfers owner share (gross minus 4%).
 
@@ -426,7 +426,7 @@ Sample response: GET `/api/rentals/{id}`
 ## 11) Observability and Ops
 
 - Metrics: clicks_valid, clicks_invalid, CTR, GMV, take_rate, listings_active, time_to_verify_dns, disputes_open.
-- Dashboards: Owner, Renter, Admin views; edge health; Stripe failures; DNS verification lag.
+- Dashboards: Owner, hirer, Admin views; edge health; Stripe failures; DNS verification lag.
 - Alerts: SSL issuance failures; surge in invalid click rate; Stripe webhook errors; domain expired (whois lookup or DNS NXDOMAIN).
 - Runbooks
   - SSL failure: check Custom Hostname status; retry issuance; confirm DNS CNAME; fall back to HTTP validation.
@@ -436,7 +436,7 @@ Sample response: GET `/api/rentals/{id}`
 ## 12) QA Plan (Key Test Cases)
 
 - Owner: domain add → pre‑validation → CNAME flip; listing publish/pause; Stripe Connect onboarding states.
-- Renter: search → checkout (period/per‑click) → configure routes → redirects function; analytics counts increment; CSV export.
+- hirer: search → checkout (period/per‑click) → configure routes → redirects function; analytics counts increment; CSV export.
 - Edge: redirect codes correct per contract; UTM preserved; robots/canonical policy applied for hosted landers.
 - Billing: Direct Charge app fee applied; usage meters aggregate correctly; refund/credit flows; webhook retries.
 - Abuse: WAF blocks known bots; Turnstile challenge on suspicious behavior; dispute creates adjustments.
@@ -452,7 +452,7 @@ Sample response: GET `/api/rentals/{id}`
 
 ## 14) Roadmap (Next 90 Days)
 
-- Offers/negotiation and rent‑to‑own add‑on.
+- Offers/negotiation and hire‑to‑own add‑on.
 - Multi‑currency, tax profiles, and regional Connect setups.
 - Owner portfolios sync (Afternic/Sedo APIs) where available.
 - Enhanced fraud models (ASN reputation, ML scoring, device graph).
@@ -470,13 +470,13 @@ Sample response: GET `/api/rentals/{id}`
 ## Pricing and Packaging (MVP Guidance)
 
 - Models
-  - Exclusive period rental: monthly term, optional multi‑month discounts (e.g., 10% off per additional committed month up to 30%).
-  - Shared slug rental: monthly base plus per‑slug fee, or per‑click only with minimum monthly commit.
+  - Exclusive period hire: monthly term, optional multi‑month discounts (e.g., 10% off per additional committed month up to 30%).
+  - Shared slug hire: monthly base plus per‑slug fee, or per‑click only with minimum monthly commit.
   - Per‑click: tiered (graduated) pricing by monthly valid clicks volume.
 
 - Recommended guardrails
   - Minimums: period ≥ $99/mo; per‑click ≥ $0.35; slug minimum commit ≥ $25/mo.
-  - Platform fee: fixed 4% of gross (already modeled in payments flows), shown transparently on owner payout screens.
+  - Platform fee: fixed 4% of gross (already modeled in payments flows), shown transpahirely on owner payout screens.
   - Free trials: none for exclusive; for slugs, allow setup-only trials with no live routing until payment method on file.
   - Refunds: pro‑rata for exclusive only when platform‑caused downtime > 24h; per‑click credits only for validated IVT.
 
@@ -486,14 +486,14 @@ Sample response: GET `/api/rentals/{id}`
   - Per‑click: $0.50 for first 1,000 valid clicks, $0.40 for next 4,000, $0.30 thereafter.
 
 - Policy snippets
-  - Cancellation: exclusive rentals renew monthly; cancel before next cycle; grace 3 days; DNS/routing cut at term end.
+  - Cancellation: exclusive hires renew monthly; cancel before next cycle; grace 3 days; DNS/routing cut at term end.
   - Overages: usage invoices finalize monthly; suspend routing at 7‑day non‑payment; routes auto‑unfreeze on payment.
   - Content/AUP: prohibit categories per AUP; violations can trigger immediate suspension without refund.
 
 ## OpenAPI Overview
 
-- Full spec file: `docs/openapi/domain-rental-marketplace.yaml`
-- Coverage: domains, listings, rentals, routes, analytics, billing, and Stripe webhooks.
+- Full spec file: `docs/openapi/domain-hire-marketplace.yaml`
+- Coverage: domains, listings, hires, routes, analytics, billing, and Stripe webhooks.
 - Auth: session/JWT (Bearer); Stripe webhooks use signature verification only.
 
 ## UX Copy Library (MVP)
@@ -511,13 +511,13 @@ Sample response: GET `/api/rentals/{id}`
   - Hint: “You can also add per‑click pricing for shared slugs.”
   - Tooltip: “Platform fee is a fixed 4% of gross. Stripe processing fees may apply.”
 
-- Renter: Checkout (Period)
+- hirer: Checkout (Period)
   - Headline: “Reserve this domain for your campaign”
   - Sub: “Billing monthly. Cancel anytime before renewal.”
-  - CTA: “Start rental”
+  - CTA: “Start hire”
   - Legal: “By continuing, you agree to the Terms and Acceptable Use Policy.”
 
-- Renter: Configure Routing
+- hirer: Configure Routing
   - Headline: “Where should visitors go?”
   - Fields: “Apex target URL • www target URL • Redirect type (302 recommended)”
   - Helper: “We’ll keep your UTM parameters intact.”
@@ -650,7 +650,7 @@ Notes
 - SRE/Ops → docs/ops/observability.md, docs/ops/runbooks/incident-response.md, docs/ops/error-budgets.md, docs/ops/disaster-recovery.md, docs/deployment/environments.md, docs/deployment/deploy-pipelines.md
 - QA Lead → docs/testing/test-strategy.md, docs/testing/edge-testing-guide.md, docs/testing/payments-test-matrix.md
 - DX Lead → docs/engineering/local-setup.md, docs/engineering/contributing.md, docs/engineering/api-guidelines.md, docs/engineering/openapi-publishing.md
-- GTM/Support → docs/gtm/owner-onboarding.md, docs/gtm/renter-onboarding.md, docs/support/faq.md, docs/support/macros.md
+- GTM/Support → docs/gtm/owner-onboarding.md, docs/gtm/hirer-onboarding.md, docs/support/faq.md, docs/support/macros.md
 
 See docs/agents for role briefs and acceptance criteria.
 

@@ -3,9 +3,9 @@
 Note: Working draft for privacy engineering. Final review required by counsel and DPO prior to launch.
 
 Overview and Scope
-- Service: Domain rental marketplace with DNS onboarding and HTTP redirects; click analytics; payments and payouts.
+- Service: Domain hire marketplace with DNS onboarding and HTTP redirects; click analytics; payments and payouts.
 - Roles: Controller for marketplace accounts, routing configuration, analytics; Processor roles may apply where operating on behalf of Owners for billing analytics.
-- Individuals affected: Owners, Renters, end visitors to rented domains.
+- Individuals affected: Owners, hirers, end visitors to rented domains.
 
 Processing Purposes and Lawful Bases
 - Provide service features (accounts, listings, routing, billing) — Contract (GDPR Art. 6(1)(b)).
@@ -17,7 +17,7 @@ Data Inventory (key items)
 - Account: name, email, auth identifiers; Better‑Auth session details.
 - Payments: limited billing info via Stripe; no full card data stored by us; Connect account IDs for Owners.
 - Routing: domain, host, path, target URLs, redirect codes; timestamps of changes.
-- Click telemetry: timestamp, host, path, renterId/ownerId, country, ASN, user agent hash, referrer domain, bot score bucket, counts; IP treated via hashing/salting for deduplication and fraud analysis.
+- Click telemetry: timestamp, host, path, hirerId/ownerId, country, ASN, user agent hash, referrer domain, bot score bucket, counts; IP treated via hashing/salting for deduplication and fraud analysis.
 - Support: messages and attachments; dispute artifacts.
 
 Special Categories and Children

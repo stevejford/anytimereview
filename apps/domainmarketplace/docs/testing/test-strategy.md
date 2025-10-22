@@ -16,10 +16,10 @@ Layers (test pyramid)
   - Scope: Next.js API routes if present; auth endpoints; OpenAPI example conformance.
   - Tools: Vitest or supertest‑style fetch against dev server.
 - Contract/API
-  - Scope: Response shapes and status codes match OpenAPI (`docs/openapi/domain-rental-marketplace.yaml`).
+  - Scope: Response shapes and status codes match OpenAPI (`docs/openapi/domain-hire-marketplace.yaml`).
   - Tools: schemathesis or Dredd; minimal happy path assertions.
 - E2E
-  - Scope: Owner Stripe Connect onboarding (mock), add domain → pre‑validation flow (token), renter checkout (test keys), route config, link check, analytics render.
+  - Scope: Owner Stripe Connect onboarding (mock), add domain → pre‑validation flow (token), hirer checkout (test keys), route config, link check, analytics render.
   - Tools: Playwright; test env with seeded DB and feature flags to bypass real DNS.
 - Load/Perf
   - Scope: Redirect path only; validate p95/p99 budgets and no degradation under spike.
@@ -27,7 +27,7 @@ Layers (test pyramid)
 
 Environments & Data
 - Neon branch per CI run (optional) or a shared DEV DB with cleanup scripts.
-- Drizzle migrations run before tests; seed minimal fixtures (owner, renter, listing, routes).
+- Drizzle migrations run before tests; seed minimal fixtures (owner, hirer, listing, routes).
 - Secrets via CI store; Stripe test keys only in non‑prod.
 
 Payments Testing

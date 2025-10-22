@@ -12,7 +12,7 @@ Last updated: 2025-10-18
 - Account data: name, email, authentication information.
 - Payments/payouts: limited billing information via our processor (Stripe). We do not store full card numbers.
 - Service data: domains, routes, settings, logs.
-- Click telemetry: timestamp, host, path, renter/owner IDs, country, ASN, user agent hash, referrer domain, bot score bucket, and counts. We hash or minimize IP addresses for deduplication.
+- Click telemetry: timestamp, host, path, hirer/owner IDs, country, ASN, user agent hash, referrer domain, bot score bucket, and counts. We hash or minimize IP addresses for deduplication.
 - Support: communications and files you provide.
 
 3) How we use data

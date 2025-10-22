@@ -4,29 +4,29 @@
 - Date: 2025-10-18
 
 Context
-- We must measure validated clicks for renter billing and analytics. Events originate in the redirector at the edge and must be queryable by time window, geo/device/referrer, and renter/route IDs. We also need to aggregate usage for Stripe metered billing.
+- We must measure validated clicks for hirer billing and analytics. Events originate in the redirector at the edge and must be queryable by time window, geo/device/referrer, and hirer/route IDs. We also need to aggregate usage for Stripe metered billing.
 
 Decision
 - Use Workers Analytics Engine (AE) to ingest raw click events from the Worker.
-- Run nightly aggregation to roll up `valid_clicks` and `invalid_clicks` per rental into Neon Postgres for billing and dashboards.
+- Run nightly aggregation to roll up `valid_clicks` and `invalid_clicks` per hire into Neon Postgres for billing and dashboards.
 - Keep route/contract system-of-record in Neon; AE is the click event store.
 
 Event shape (conceptual)
-- Dimensions: timestamp, host, path, routeId/rentalId, ownerId, renterId, country, asn, userAgent hash, referrer domain, bot score bucket
+- Dimensions: timestamp, host, path, routeId/hireId, ownerId, hirerId, country, asn, userAgent hash, referrer domain, bot score bucket
 - Measures: count (1), invalid flag (bool)
 
 Worker write pattern (pseudo)
 ```ts
 // env.CLICKS_AE is an Analytics Engine dataset binding
 env.CLICKS_AE.writeDataPoint({
-  blobs: [host, path, routeId, renterId, country, asn, botBucket, referrer],
+  blobs: [host, path, routeId, hirerId, country, asn, botBucket, referrer],
   doubles: [1, isInvalid ? 1 : 0],
   indexes: [Date.now()],
 });
 ```
 
 Rollup job
-- Nightly cron/queue reads AE via SQL API to aggregate per day/rental into Neon (`click_rollups`)
+- Nightly cron/queue reads AE via SQL API to aggregate per day/hire into Neon (`click_rollups`)
 - Late-arriving invalidations (IVT) recorded as adjustments in the next cycle
 
 Alternatives considered

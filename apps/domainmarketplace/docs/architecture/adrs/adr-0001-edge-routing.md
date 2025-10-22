@@ -40,5 +40,5 @@ POC and measurement
 
 Links
 - performance-budgets.md
-- openapi/domain-rental-marketplace.yaml
+- openapi/domain-hire-marketplace.yaml
 

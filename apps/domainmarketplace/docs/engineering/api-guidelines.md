@@ -29,7 +29,7 @@ Idempotency
 
 Security
 - Authn: Better‑Auth session/JWT; Bearer for API requests
-- Authz: role-based checks (owner, renter, admin)
+- Authz: role-based checks (owner, hirer, admin)
 - Rate limiting: per-IP/user with exponential backoff on 429
 - Webhooks: Verify Stripe signatures; respond 2xx on success, non-2xx to trigger retry
 
@@ -39,6 +39,6 @@ Requests/Responses
 - Nullability: omit absent fields instead of null where possible
 
 OpenAPI
-- Source of truth: `docs/openapi/domain-rental-marketplace.yaml`
+- Source of truth: `docs/openapi/domain-hire-marketplace.yaml`
 - Keep in sync with implementation; annotate examples; run CI validation (see openapi-publishing.md)
 

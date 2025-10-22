@@ -1,7 +1,7 @@
 # Owner Onboarding Guide
 
 Audience
-- Domain owners listing domains for exclusive rentals or shared slugs.
+- Domain owners listing domains for exclusive hires or shared slugs.
 
 What you need
 - Registrar/DNS access for the domain
@@ -57,7 +57,7 @@ Step‑by‑step
 [screenshot: pricing]
 
 9) Publish listing
-- Click Publish to make your domain discoverable. You can pause/unpublish anytime; active rentals run until term end.
+- Click Publish to make your domain discoverable. You can pause/unpublish anytime; active hires run until term end.
 [screenshot: publish]
 
 DNS tips and notes

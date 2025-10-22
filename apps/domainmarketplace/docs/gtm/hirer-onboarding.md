@@ -1,19 +1,19 @@
-# Renter Onboarding Guide
+# Hirer Onboarding Guide
 
 Audience
-- Renters (marketers/agencies/SMBs) acquiring a domain or slugs for campaigns.
+- Hirers (marketers/agencies/SMBs) acquiring a domain or slugs for campaigns.
 
 Overview
-1) Browse listings → 2) Select rental mode → 3) Checkout → 4) Configure routing → 5) Validate → 6) Launch → 7) Track and export
+1) Browse listings → 2) Select hire mode → 3) Checkout → 4) Configure routing → 5) Validate → 6) Launch → 7) Track and export
 
 1) Browse and search
 - Use filters by keyword/vertical/geo. Open a listing to view pricing, availability (exclusive vs shared slugs), and policies.
 [screenshot: listing search]
 
-2) Choose rental mode
+2) Choose hire mode
 - Exclusive (entire domain) — monthly term; apex and www redirect to your target(s).
 - Shared slugs — reserve one or many path slugs under an owner’s domain.
-[screenshot: rental selection]
+[screenshot: hire selection]
 
 3) Checkout
 - Period (monthly): pay a fixed price now; renew each month. Cancel before renewal.
@@ -37,7 +37,7 @@ Overview
 [screenshot: analytics]
 
 7) Billing and renewals
-- Period rentals renew monthly on your billing date. Cancel before the next cycle in Billing → Rentals.
+- Period hires renew monthly on your billing date. Cancel before the next cycle in Billing → hires.
 - Per‑click: invoices finalize monthly; charges occur automatically. View itemized usage on the invoice.
 
 Disputes and credits

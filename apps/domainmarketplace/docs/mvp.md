@@ -1,7 +1,7 @@
 # MVP Documentation Map
 \
 Purpose
-- Provide a single starting point that links the core documents required to plan, build, launch, and operate the Domain Rental Marketplace MVP.
+- Provide a single starting point that links the core documents required to plan, build, launch, and operate the Domain hire Marketplace MVP.
 
 How to Use This Map
 1. Start with the strategy and scope docs to understand the product vision and constraints.
@@ -9,18 +9,18 @@ How to Use This Map
 3. Follow cross-links for detailed runbooks, policies, and playbooks. Each section below calls out the primary owner and key decisions already captured.
 
 ## 1. Strategy & Scope
-- `docs/domain-rental-marketplace-report.md` — Foundation research, architecture choices, and the embedded MVP PRD.
+- `docs/domain-hire-marketplace-report.md` — Foundation research, architecture choices, and the embedded MVP PRD.
 - `docs/product/kpis-and-dashboards.md` — North-star KPIs and success metrics for launch and beyond.
 - `docs/agents/workers/product-strategist.worker.md` — Role charter guiding roadmap and backlog ownership.
 
 ## 2. Personas, Journeys & GTM
 - `docs/gtm/owner-onboarding.md` — Owner acquisition funnel, onboarding steps, and messaging.
-- `docs/gtm/renter-onboarding.md` — Renter journey, trial-to-paid conversion points, and nurture tactics.
+- `docs/gtm/hirer-onboarding.md` — hirer journey, trial-to-paid conversion points, and nurture tactics.
 - `docs/support/faq.md` — Top customer questions aligning support with GTM messaging.
 
 ## 3. Product & Experience Requirements
-- `docs/seo/redirect-policy.md` — Redirect semantics (302 vs 301) and SEO guardrails for rentals versus slugs.
-- `docs/support/macros.md` — Communication templates for key scenarios (rentals, IVT disputes, outages).
+- `docs/seo/redirect-policy.md` — Redirect semantics (302 vs 301) and SEO guardrails for hires versus slugs.
+- `docs/support/macros.md` — Communication templates for key scenarios (hires, IVT disputes, outages).
 - `docs/payments/disputes-and-credits.md` — Customer-facing policy for refunds, IVT credits, and evidence expectations.
 
 ## 4. Architecture & Edge Strategy
@@ -61,7 +61,7 @@ How to Use This Map
 - `docs/trust-safety/bot-lists-process.md` — Bot list lifecycle, exceptions, and audit trail.
 - `docs/trust-safety/escalation-sla.md` — Abuse intake, severities, contact tree, and appeal timelines.
 - `docs/legal/acceptable-use-policy.md` — Customer obligations and prohibited content.
-- `docs/legal/terms-of-service.md` — Platform terms governing owners and renters.
+- `docs/legal/terms-of-service.md` — Platform terms governing owners and hirers.
 - `docs/legal/udrp-workflow.md` — Workflow for domain disputes and trademark claims.
 - `docs/trust-safety/bot-lists-process.md` pairs with Cloudflare controls in `docs/architecture/cloudflare-limits.md` for mitigation.
 

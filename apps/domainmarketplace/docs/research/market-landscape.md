@@ -1,4 +1,4 @@
-# Market Landscape — Domain Rental Marketplace
+# Market Landscape — Domain hire Marketplace
 
 Purpose
 - Compare adjacent products, summarize pricing models, and clarify differentiation for an MVP “rent a domain or slug” platform.
@@ -15,21 +15,21 @@ Comparators (by category)
   - Bodis — Ad parking network; revenue split model; fraud filtering.
   - ParkingCrew — Ad parking; revenue share; optimization.
 - Domain Marketplaces (Sales/Leasing)
-  - Dan.com — Buy now, installments/lease‑to‑own; ownership transfer at end; not campaign rentals.
-  - GoDaddy (Lease to Own) — Payment plans for purchases; transfer on completion; not short‑term campaign rentals.
-  - Squadhelp/Brandable markets — Brandable names; financing plans; primarily sales, not rentals.
+  - Dan.com — Buy now, installments/lease‑to‑own; ownership transfer at end; not campaign hires.
+  - GoDaddy (Lease to Own) — Payment plans for purchases; transfer on completion; not short‑term campaign hires.
+  - Squadhelp/Brandable markets — Brandable names; financing plans; primarily sales, not hires.
 - Link Management / Redirect SaaS
   - Bitly — Link shortener/management; branded domains; subscription pricing.
   - Short.io — Branded links; supports custom domains and slugs; subscription pricing.
 - Rank‑and‑Rent (SEO service model)
-  - Agencies/operators offering local‑SEO sites for monthly fees; lead gen routed to renter; not self‑serve domain routing.
+  - Agencies/operators offering local‑SEO sites for monthly fees; lead gen routed to hirer; not self‑serve domain routing.
 
 Feature Matrix (high‑level)
-- Self‑serve domain rentals (exclusive):
+- Self‑serve domain hires (exclusive):
   - Typical parking/marketplaces: No
   - Link SaaS: N/A (bring your own domain)
   - This platform: Yes
-- Shared slug rentals under an owner’s domain:
+- Shared slug hires under an owner’s domain:
   - Typical parking/marketplaces: No
   - Link SaaS: N/A (BYO domain)
   - This platform: Yes
@@ -42,24 +42,24 @@ Feature Matrix (high‑level)
   - Link SaaS: Basic analytics; not IVT‑grade for billing
   - This platform: Yes (Workers + AE + IVT policy)
 - Flexible billing (period + metered per‑click):
-  - Parking/marketplaces: Revenue share from ads, not renter‑paid
+  - Parking/marketplaces: Revenue share from ads, not hirer‑paid
   - Marketplaces LTO: Installments for purchases, not usage
   - This platform: Yes
 
 Pricing snapshots (indicative)
-- Parking: Revenue share (owner share varies); no upfront renter pricing.
+- Parking: Revenue share (owner share varies); no upfront hirer pricing.
 - Marketplaces LTO: Monthly installments tied to domain price; platform fee varies.
 - Link management: Subscription (Bitly/Short.io tiers) — helpful benchmark for value of branded links.
-- Your MVP: period rentals (e.g., $99–$999+/mo by quality) and per‑click tiers ($0.50 → $0.30 with volume) with 4% platform take.
+- Your MVP: period hires (e.g., $99–$999+/mo by quality) and per‑click tiers ($0.50 → $0.30 with volume) with 4% platform take.
 
 Key Gaps Filled by MVP
 - Liquidity for owners beyond ad parking or selling; campaign‑level monetization.
-- Renter access to high‑relevance domains without purchase.
+- hirer access to high‑relevance domains without purchase.
 - IVT‑aware billing and transparent analytics.
 - Low‑friction DNS onboarding at scale (DC + Cloudflare for SaaS).
 
 Recommendations
-- Lead with shared‑slug offerings to seed liquidity; expand exclusive rentals as supply grows.
+- Lead with shared‑slug offerings to seed liquidity; expand exclusive hires as supply grows.
 - Publish IVT policy and refund/credit playbooks to build trust.
 - Offer clear DNS onboarding guides and provider matrix to reduce friction.
 

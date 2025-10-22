@@ -1,7 +1,7 @@
-# Pricing Benchmarks — Rentals and Per‑Click
+# Pricing Benchmarks — hires and Per‑Click
 
 Purpose
-- Establish initial pricing tiers and guardrails for exclusive domain rentals and shared slug rentals, plus per‑click usage rates.
+- Establish initial pricing tiers and guardrails for exclusive domain hires and shared slug hires, plus per‑click usage rates.
 
 Inputs
 - Adjacent pricing: link management subscriptions (Bitly/Short.io); domain marketplaces with installment plans; domain parking yields.
@@ -12,7 +12,7 @@ Methodology
 - Start with value‑based framing relative to CPC: vanity domains/slug relevance should command a fraction of campaign CPC while remaining attractive v. alternatives.
 - Anchor with simple, transparent tiers; adjust per vertical/domain quality over time.
 
-Exclusive Period Rentals (monthly)
+Exclusive Period hires (monthly)
 - Tier A (Starter): $99–$199/mo — long‑tail domains, light relevance; proof‑of‑concept campaigns.
 - Tier B (Core): $299–$599/mo — good relevance/brandability; SMB/agency campaigns.
 - Tier C (Premium): $999–$2,500+/mo — high‑relevance, geo/EMD; enterprise/agency use.
@@ -36,8 +36,8 @@ Illustrative economics
 - Example: $500/mo exclusive: platform fee $20; owner receives $500 minus Stripe fees and app fee transfer.
 
 Sensitivity: IVT and Seasonality
-- Higher IVT → lower net valid clicks; usage tiers absorb some variance; IVT caps and manual dispute credits stabilize renter ROI.
-- Seasonality: allow renters to scale slugs or switch domains; offer pause windows with minimums to preserve supply liquidity.
+- Higher IVT → lower net valid clicks; usage tiers absorb some variance; IVT caps and manual dispute credits stabilize hirer ROI.
+- Seasonality: allow hirers to scale slugs or switch domains; offer pause windows with minimums to preserve supply liquidity.
 
 Assumptions & Notes
 - Pricing flexible by vertical; legal/insurance trades at higher CPCs — adjust top tier accordingly.

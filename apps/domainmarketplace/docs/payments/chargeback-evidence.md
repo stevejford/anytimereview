@@ -13,7 +13,7 @@ Common dispute categories and evidence
   - Attach: Routing uptime evidence, AE rollups for the period, screenshots of active routes, communication with customer.
 - Canceled recurring / subscription canceled
   - Narrative: Show cancellation date/time and renewal policy; charge preceded cancellation; or charge reversed/credited.
-  - Attach: Subscription/rental logs, cancellation request, policy excerpt, credit/refund proof if applicable.
+  - Attach: Subscription/hire logs, cancellation request, policy excerpt, credit/refund proof if applicable.
 - Duplicate
   - Narrative: Single service per period; one charge valid; the other already refunded or voided.
   - Attach: Charge IDs mapping, refund/void records, invoice copies.
@@ -23,7 +23,7 @@ Common dispute categories and evidence
 
 Checklist per submission
 - [ ] Charge/PaymentIntent ID and date
-- [ ] Customer, rentalId, and service description
+- [ ] Customer, hireId, and service description
 - [ ] Service delivery proof (routing active, logs, analytics)
 - [ ] TOS/AUP acceptance and policy excerpts
 - [ ] Communication thread excerpts (if any)
@@ -38,7 +38,7 @@ Dispute ID: <id>
 Charge ID: <ch_...>
 Payment Intent: <pi_...>
 Customer: <name/email>
-Service: Domain/slug rental for <domain>, period <dates>
+Service: Domain/slug hire for <domain>, period <dates>
 Amount: $X.XX
 ```
 

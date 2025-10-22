@@ -9,7 +9,7 @@ Artifacts per test
 - Webhook event IDs processed (ordered), idempotency keys used
 - App logs, DB records (contracts, rollups, usage_ledger)
 
-Period Rentals — Direct Charges
+Period hires — Direct Charges
 - Success — happy path
   - Steps: Create PaymentIntent (on_behalf_of + transfer_data + app fee) → confirm → webhook handled.
   - Assert: contract active; owner payout scheduled; platform app fee recorded.
@@ -47,7 +47,7 @@ Usage Billing — Metered Subscriptions
   - Assert: subscription in past_due; routes paused if policy; retries occur.
 - Credit note (IVT adjustment)
   - Steps: Create credit note for invoice.
-  - Assert: renter balance updated; owner transfer adjusted if needed.
+  - Assert: hirer balance updated; owner transfer adjusted if needed.
 
 Connect Transfers
 - Transfer success

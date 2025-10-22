@@ -5,16 +5,16 @@ Objective
 
 Data sources
 - Raw events: Workers Analytics Engine (AE)
-- Rollups: `click_rollups` in Neon (day, rentalId, valid/invalid)
+- Rollups: `click_rollups` in Neon (day, hireId, valid/invalid)
 
 Aggregation job (nightly)
 - Window: previous UTC day (00:00–23:59:59)
-- Query AE for `valid_clicks` minus confirmed invalid clicks for each rentalId
-- Upsert into Neon `click_rollups(day, rental_id)` with `valid_clicks`, `invalid_clicks`
-- Derive usage items: `{ rentalId, day, clicks }`
+- Query AE for `valid_clicks` minus confirmed invalid clicks for each hireId
+- Upsert into Neon `click_rollups(day, hire_id)` with `valid_clicks`, `invalid_clicks`
+- Derive usage items: `{ hireId, day, clicks }`
 
 Stripe usage recording
-- Approach: Stripe Billing subscription with metered price per Rental (or per Owner with separate meter per rentalId—choose based on desired invoice granularity)
+- Approach: Stripe Billing subscription with metered price per hire (or per Owner with separate meter per hireId—choose based on desired invoice granularity)
 - API: record usage with idempotency
 - Idempotency key: `usage:{subscriptionItemId}:{day}`
 - Payload: `{ quantity: clicks, timestamp: end_of_day_ts, action: 'set' }` or cumulative ‘set’ values to avoid double counts
@@ -25,7 +25,7 @@ Idempotency and retries
 - Exponential backoff (e.g., 1s, 5s, 30s, 2m, 10m) capped at 24h; alert on persistent failures
 
 Late IVT adjustments
-- Maintain `adjustments` table with `{ rentalId, day, delta_clicks, reason, created_at }`
+- Maintain `adjustments` table with `{ hireId, day, delta_clicks, reason, created_at }`
 - Apply deltas via next cycle credit note or usage correction (set to corrected cumulative value)
 
 Backfill & replay
@@ -33,11 +33,11 @@ Backfill & replay
 - For long gaps, coordinate with Finance to issue manual credits/adjustments on the invoice
 
 Reconciliation
-- Nightly: Stripe invoice preview vs Neon expected totals per subscription/rental
+- Nightly: Stripe invoice preview vs Neon expected totals per subscription/hire
 - Monthly close: lock rollups; generate variance report; investigate deltas > 0.5%
 
 Security & privacy
-- No PII in usage payloads; rentalId/subscriptionItemId only
+- No PII in usage payloads; hireId/subscriptionItemId only
 - Verify Stripe API keys are restricted; use server‑side only; signature‑verify webhooks
 
 Monitoring

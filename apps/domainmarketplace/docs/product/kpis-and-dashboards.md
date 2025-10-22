@@ -4,7 +4,7 @@ Purpose
 - Define success metrics, owners, and review cadence for the MVP. Emphasize marketplace liquidity, click integrity, and revenue health.
 
 North‑Star and Core KPIs
-- GMV (Gross Marketplace Volume) — total renter spend (period + usage) before fees
+- GMV (Gross Marketplace Volume) — total hirer spend (period + usage) before fees
   - Formula: `GMV = sum(period_charges) + sum(usage_charges)`
 - Platform Revenue (Take Rate) — our 4% fee on GMV
   - Formula: `Revenue = GMV * 0.04`
@@ -22,7 +22,7 @@ North‑Star and Core KPIs
 
 Funnel Metrics
 - Owner activation rate — `owners_connected_stripe / owners_signed_up`
-- Renter activation rate — `first_checkout / renters_signed_up`
+- hirer activation rate — `first_checkout / hirers_signed_up`
 - Listing engagement — `views_to_inquiry`, `views_to_checkout`
 
 Dashboards
@@ -36,7 +36,7 @@ Dashboards
   - Earnings (period and usage), payouts scheduled
   - Clicks by route (valid/invalid), geo/device/referrer
   - DNS status and suggestions
-- Renter
+- hirer
   - Validated clicks by route, CTR, cost per click (usage)
   - Invoice totals and upcoming charges; export CSV
 

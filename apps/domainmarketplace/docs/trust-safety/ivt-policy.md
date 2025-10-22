@@ -9,7 +9,7 @@ Scope
 Definitions
 - GIVT (General/Known): traffic from known spiders/bots or deterministic non‑human sources (e.g., IAB list, verified bots, headless test tools).
 - SIVT (Sophisticated): traffic that mimics human behavior or evades simple filters (data center spoofing, hijacked devices, automation frameworks).
-- Billable click: a unique redirect event with successful 3xx status to the renter target that is not filtered as IVT and passes de‑duplication.
+- Billable click: a unique redirect event with successful 3xx status to the hirer target that is not filtered as IVT and passes de‑duplication.
 
 Signals (inputs)
 - Cloudflare Bot Score (0–99): likelihood of bot automation (lower = more bot‑like).
@@ -32,17 +32,17 @@ Counting & De‑duplication
 - Uniqueness window: first qualifying click per (linkId × user key) every 30 minutes is billable.
   - User key precedence: cookie ID → stable fingerprint → (IP + UA) fallback.
 - Burst guard: more than 5 events/sec for same (linkId × IP) flagged for review; subsequent events within the same second are non‑billable.
-- Redirect success: require 3xx response with Location to renter target; 4xx/5xx are non‑billable.
+- Redirect success: require 3xx response with Location to hirer target; 4xx/5xx are non‑billable.
 
 Auto‑Credits (metered billing)
 - Purpose: absorb small residual IVT/measurement error without manual casework.
-- Default cap per invoice (renter):
+- Default cap per invoice (hirer):
   - Up to 2% of billed clicks automatically credited when subsequently classified as Tier A or Tier B, capped at 1,000 clicks or $500 equivalent (whichever is lower) per invoice.
   - Credits appear as a credit note on the same invoice if still open, or on the next invoice.
-- Overrides: Trust & Safety may adjust caps for specific renters/sectors; document rationale in the case ticket.
+- Overrides: Trust & Safety may adjust caps for specific hirers/sectors; document rationale in the case ticket.
 
 Disputes & Manual Adjustments
-- Renters may file a dispute within 30 days of invoice finalization (see disputes-and-credits.md).
+- hirers may file a dispute within 30 days of invoice finalization (see disputes-and-credits.md).
 - Evidence considered: event samples with bot scores, UA/ASN, timing diagrams, referrer integrity, JS/cookie presence, and IAB list matches.
 - Outcomes: approve (additional credit), partial, or deny, each with written rationale and artifact links.
 

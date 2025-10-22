@@ -23,7 +23,7 @@ Running locally
 API and schema changes
 - If you add/change DB schema in `packages/db/src/schema`, regenerate/push migrations
 - Update `.env.example` files if new env vars are introduced
-- Update OpenAPI spec at `docs/openapi/domain-rental-marketplace.yaml` for public endpoints
+- Update OpenAPI spec at `docs/openapi/domain-hire-marketplace.yaml` for public endpoints
 
 PR checklist
 - [ ] Code formatted and types checked

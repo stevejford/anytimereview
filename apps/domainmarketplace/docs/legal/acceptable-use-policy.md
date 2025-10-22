@@ -4,7 +4,7 @@ Purpose
 - Protect users and third parties by restricting abusive or unlawful use of the Service.
 
 Applies to
-- All Owners and Renters; all routed destinations and content; all traffic directed via the Service.
+- All Owners and Hirers; all routed destinations and content; all traffic directed via the Service.
 
 Prohibited content and uses (non‑exhaustive)
 - Illegal activities or content; violation of applicable laws or regulations.

@@ -27,7 +27,7 @@ Web app (Next.js)
   - Controls: per‑IP/user rate limits, captcha/Turnstile on abuse signals; exponential backoff.
 - Elevation of Privilege
   - Risks: role escalation via IDOR or missing checks.
-  - Controls: centralized authorization middleware; least‑privilege roles (owner, renter, admin); deny‑by‑default.
+  - Controls: centralized authorization middleware; least‑privilege roles (owner, hirer, admin); deny‑by‑default.
 
 Edge Worker (redirector)
 - Spoofing
@@ -75,7 +75,7 @@ Cross‑cutting Controls
   - V14 Config: secrets via platform stores; no secrets in repo; least privilege keys.
 
 Open Redirect Considerations
-- Redirect is the core feature; however, restrict protocols to `https?` and validate absolute URLs. Consider optional domain allowlists per renter if abuse observed.
+- Redirect is the core feature; however, restrict protocols to `https?` and validate absolute URLs. Consider optional domain allowlists per hirer if abuse observed.
 
 Residual Risks
 - Eventual consistency in KV causing brief mismatch; mitigated via DO‑coordinated writes.

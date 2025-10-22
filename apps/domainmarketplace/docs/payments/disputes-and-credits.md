@@ -1,7 +1,7 @@
 # Disputes, Credits, and Refunds
 
 Scope
-- Applies to period (fixed) rentals and per‑click metered plans.
+- Applies to period (fixed) hires and per‑click metered plans.
 
 Principles
 - Fairness and integrity; credits for validated invalid traffic (IVT); clear timelines; auditable adjustments.
@@ -11,14 +11,14 @@ IVT Credits (Per‑click)
 - Manual credits: Additional suspected IVT handled via dispute intake; adjust next invoice or issue credit note on current invoice if still open.
 - Evidence: Bot scores, ASN/geo anomalies, frequency caps, referrer integrity, IAB lists; see ivt-policy.md.
 
-Period Rental Refunds
+Period hire Refunds
 - Eligibility: Platform‑caused downtime (routing unavailability) exceeding SLA thresholds (e.g., > 15 consecutive minutes or > 0.1% monthly unavailability).
 - Form: Pro‑rata service credit applied to next cycle; refunds to original payment method only for exceptional cases.
 - Exclusions: Customer DNS misconfiguration, destination outages, content/app errors, or abuse suspensions.
 
 Dispute SOP (both models)
 1) Intake
-- Ticket created with rentalId, period, claimed issue, requested remedy.
+- Ticket created with hireId, period, claimed issue, requested remedy.
 2) Investigation
 - Gather logs (routing health, click telemetry, bot signals); compare against SLAs and policy thresholds.
 3) Decision
@@ -39,7 +39,7 @@ Stripe mechanics
   - For refunds, reverse related transfers to Owners.
 
 Timelines
-- Dispute submission window: within 30 days of invoice finalization (metered) or rental period charge (period).
+- Dispute submission window: within 30 days of invoice finalization (metered) or hire period charge (period).
 - Investigation SLA: initial response within 3 business days; resolution within 10 business days.
 
 Communications

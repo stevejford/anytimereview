@@ -16,7 +16,7 @@ Routing & Redirects
 - Do you preserve UTM parameters?
   - Yes. Query strings are preserved by default.
 - Which redirect code should I use?
-  - Use 302 for temporary rentals. Use 301 only when the move is permanent per contract.
+  - Use 302 for temporary hires. Use 301 only when the move is permanent per contract.
 - Can I map multiple slugs at once?
   - Yes. Use bulk upload on the slug configuration screen.
 - I’m getting a 404. Why?
@@ -31,7 +31,7 @@ Billing & Payments
   - Per your Stripe Connect payout schedule after successful charges clear. See Payouts in your dashboard.
 
 Refunds & IVT
-- Do you offer refunds for period rentals?
+- Do you offer refunds for period hires?
   - Refunds are limited. Pro‑rata credits may apply for platform‑caused downtime per SLA. See our policy.
 - How do IVT credits work on per‑click plans?
   - We filter bots and invalid activity. If IVT is identified post‑facto, credits apply up to policy caps and reflected on the next invoice.
@@ -46,9 +46,9 @@ Analytics
 
 Accounts & Support
 - How do I cancel?
-  - Period rentals: cancel before renewal in Billing → Rentals. Per‑click: cancel the plan to stop future usage charges.
+  - Period hires: cancel before renewal in Billing → hires. Per‑click: cancel the plan to stop future usage charges.
 - How do I contact support?
-  - Use in‑app Support or email support@example.com with your domain, rental ID, and a brief description.
+  - Use in‑app Support or email support@example.com with your domain, hire ID, and a brief description.
 
 References
 - DNS Cutover Runbook: docs/ops/runbooks/dns-cutover.md
