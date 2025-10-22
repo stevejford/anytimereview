@@ -115,15 +115,15 @@ router.post("/period/checkout", requireAuth, async (c) => {
 			return c.json({ error: "Unable to resolve renter profile" }, 400);
 		}
 
-		let customerId = row.rental.stripeCustomerId;
+		let customerId = row.hire.stripeCustomerId;
 		if (!customerId) {
 			customerId = await createOrGetCustomer(stripe, renterRecord.email, renterRecord.id, {
-				rentalId,
+				hireId,
 			});
 			await db
-				.update(rentals)
+				.update(hires)
 				.set({ stripeCustomerId: customerId, updatedAt: new Date() })
-				.where(eq(rentals.id, rentalId));
+				.where(eq(hires.id, hireId));
 		}
 
 		const feePercent = parseFeePercent(c.env);
@@ -135,7 +135,7 @@ router.post("/period/checkout", requireAuth, async (c) => {
 			currency,
 			customerId,
 			ownerAccountId: row.owner.stripeConnectAccountId,
-			rentalId,
+			hireId,
 			feePercent,
 		});
 
@@ -143,7 +143,7 @@ router.post("/period/checkout", requireAuth, async (c) => {
 		const [invoiceRecord] = await db
 			.insert(invoices)
 			.values({
-				rentalId,
+				hireId,
 				stripeInvoiceId: paymentIntentId,
 				amountCents,
 				type: "period",
@@ -159,13 +159,13 @@ router.post("/period/checkout", requireAuth, async (c) => {
 				},
 			});
 
-		return c.json({ 
-			clientSecret, 
-			invoiceId: invoiceRecord?.id ?? null 
+		return c.json({
+			clientSecret,
+			invoiceId: invoiceRecord?.id ?? null
 		});
 	} catch (error) {
 		console.error("period checkout failed", {
-			rentalId,
+			hireId,
 			userId: user.id,
 			error,
 		});
@@ -191,7 +191,7 @@ router.post("/usage/report", async (c) => {
 		return c.json({ error: "Invalid request" }, 400);
 	}
 
-	let { rentalId, day, clicks, force } = parsed.data;
+	let { hireId, day, clicks, force } = parsed.data;
 
 	// If day is not provided, compute yesterday's date
 	if (!day) {
@@ -200,23 +200,23 @@ router.post("/usage/report", async (c) => {
 	}
 
 	try {
-		const [rentalRow] = await db
-			.select({ rental: rentals })
-			.from(rentals)
-			.where(eq(rentals.id, rentalId))
+		const [hireRow] = await db
+			.select({ hire: hires })
+			.from(hires)
+			.where(eq(hires.id, hireId))
 			.limit(1);
 
-		if (!rentalRow) {
-			return c.json({ error: "Rental not found" }, 404);
+		if (!hireRow) {
+			return c.json({ error: "Hire not found" }, 404);
 		}
 
-		const rental = rentalRow.rental;
-		if (rental.type !== "per_click") {
-			return c.json({ error: "Rental is not usage based" }, 400);
+		const hire = hireRow.hire;
+		if (hire.type !== "per_click") {
+			return c.json({ error: "Hire is not usage based" }, 400);
 		}
 
-		if (!rental.stripeSubscriptionItemId) {
-			return c.json({ error: "Rental does not have an active subscription" }, 409);
+		if (!hire.stripeSubscriptionItemId) {
+			return c.json({ error: "Hire does not have an active subscription" }, 409);
 		}
 
 		if (!day) {
@@ -225,7 +225,7 @@ router.post("/usage/report", async (c) => {
 
 		const idempotencyKey = generateIdempotencyKey(
 			"usage",
-			rental.stripeSubscriptionItemId,
+			hire.stripeSubscriptionItemId,
 			day,
 		);
 
@@ -251,7 +251,7 @@ router.post("/usage/report", async (c) => {
 		const stripe = getStripeClient(c.env);
 		await recordUsage(
 			stripe,
-			rental.stripeSubscriptionItemId,
+			hire.stripeSubscriptionItemId,
 			clicks,
 			Math.floor(asDate.getTime() / 1000),
 			idempotencyKey,
@@ -260,8 +260,8 @@ router.post("/usage/report", async (c) => {
 		await db
 			.insert(usageLedger)
 			.values({
-				rentalId,
-				subscriptionItemId: rental.stripeSubscriptionItemId,
+				hireId,
+				subscriptionItemId: hire.stripeSubscriptionItemId,
 				day, // day is already a string in YYYY-MM-DD format
 				clicksSent: clicks,
 				idempotencyKey,
@@ -280,7 +280,7 @@ router.post("/usage/report", async (c) => {
 		return c.json({ status: "accepted" }, 202);
 	} catch (error) {
 		console.error("usage reporting failed", {
-			rentalId,
+			hireId,
 			day,
 			error,
 		});
@@ -296,19 +296,19 @@ router.get("/invoices", requireAuth, async (c) => {
 
 	try {
 		const rows = await db
-			.select({ invoice: invoices, rental: rentals })
+			.select({ invoice: invoices, hire: hires })
 			.from(invoices)
-			.leftJoin(rentals, eq(invoices.rentalId, rentals.id))
-			.where(eq(rentals.renterId, user.id))
+			.leftJoin(hires, eq(invoices.hireId, hires.id))
+			.where(eq(hires.hirerId, user.id))
 			.orderBy(desc(invoices.createdAt));
 
-		const payload = rows.map(({ invoice, rental }) => ({
+		const payload = rows.map(({ invoice, hire }) => ({
 			id: invoice.id,
 			stripeInvoiceId: invoice.stripeInvoiceId,
 			amountCents: invoice.amountCents,
 			type: invoice.type,
 			status: invoice.status,
-			rentalId: rental?.id ?? null,
+			hireId: hire?.id ?? null,
 			createdAt: invoice.createdAt.toISOString(),
 			updatedAt: invoice.updatedAt.toISOString(),
 		}));

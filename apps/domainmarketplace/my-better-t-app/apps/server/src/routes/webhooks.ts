@@ -156,7 +156,7 @@ async function handlePaymentIntentFailed(event: Stripe.Event) {
 			amountCents: intent.amount ?? 0,
 			type: "period",
 			status: "void",
-			rentalId,
+			hireId,
 		})
 		.onConflictDoUpdate({
 			target: invoices.stripeInvoiceId,
@@ -169,26 +169,26 @@ async function handlePaymentIntentFailed(event: Stripe.Event) {
 
 async function handleSubscriptionCreated(event: Stripe.Event) {
 	const subscription = getEventPayload<Stripe.Subscription>(event);
-	const rentalId = subscription.metadata?.rentalId;
-	if (!rentalId) return;
+	const hireId = subscription.metadata?.hireId;
+	if (!hireId) return;
 
 	const item = subscription.items.data[0];
 	if (!item) return;
 
 	await db
-		.update(rentals)
+		.update(hires)
 		.set({
 			stripeSubscriptionId: subscription.id,
 			stripeSubscriptionItemId: item.id,
 			updatedAt: new Date(),
 		})
-		.where(eq(rentals.id, rentalId));
+		.where(eq(hires.id, hireId));
 }
 
 async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event: Stripe.Event) {
 	const invoice = getEventPayload<Stripe.Invoice>(event);
-	const rentalId = invoice.metadata?.rentalId;
-	if (!rentalId) return;
+	const hireId = invoice.metadata?.hireId;
+	if (!hireId) return;
 
 	const isMetered = invoice.lines?.data[0]?.price?.recurring?.usage_type === "metered";
 
@@ -199,7 +199,7 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 			amountCents: invoice.amount_paid ?? 0,
 			type: isMetered ? "usage" : "period",
 			status: "paid",
-			rentalId,
+			hireId,
 		})
 		.onConflictDoUpdate({
 			target: invoices.stripeInvoiceId,
@@ -212,22 +212,22 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 
 	// For metered billing, create payout and transfer to owner
 	if (isMetered) {
-		// Fetch owner information via rental -> listing -> domain -> user
+		// Fetch owner information via hire -> listing -> domain -> user
 		const [row] = await db
 			.select({
 				owner: users,
 			})
-			.from(rentals)
-			.innerJoin(listings, eq(listings.id, rentals.listingId))
+			.from(hires)
+			.innerJoin(listings, eq(listings.id, hires.listingId))
 			.innerJoin(domains, eq(domains.id, listings.domainId))
 			.innerJoin(users, eq(users.id, domains.ownerId))
-			.where(eq(rentals.id, rentalId))
+			.where(eq(hires.id, hireId))
 			.limit(1);
 
 		if (!row || !row.owner.stripeConnectAccountId) {
-			console.error("handleInvoicePaid: owner or Connect account not found", { 
-				rentalId, 
-				invoiceId: invoice.id 
+			console.error("handleInvoicePaid: owner or Connect account not found", {
+				hireId,
+				invoiceId: invoice.id
 			});
 			// Return error to trigger Stripe retry
 			throw new Error("Owner Connect account not found");
@@ -250,8 +250,8 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 			.limit(1);
 
 		if (existingPayout) {
-			console.log("handleInvoicePaid: payout already exists", { 
-				rentalId, 
+			console.log("handleInvoicePaid: payout already exists", {
+				hireId,
 				invoiceId: invoice.id,
 				payoutId: existingPayout.id,
 			});
@@ -259,11 +259,11 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 		}
 
 		// Convert period timestamps to dates
-		const periodStart = invoice.period_start 
-			? new Date(invoice.period_start * 1000) 
+		const periodStart = invoice.period_start
+			? new Date(invoice.period_start * 1000)
 			: null;
-		const periodEnd = invoice.period_end 
-			? new Date(invoice.period_end * 1000) 
+		const periodEnd = invoice.period_end
+			? new Date(invoice.period_end * 1000)
 			: null;
 
 		// Create payout record
@@ -279,9 +279,9 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 			.returning();
 
 		if (!payoutRecord) {
-			console.error("handleInvoicePaid: failed to create payout record", { 
-				rentalId, 
-				invoiceId: invoice.id 
+			console.error("handleInvoicePaid: failed to create payout record", {
+				hireId,
+				invoiceId: invoice.id
 			});
 			throw new Error("Failed to create payout record");
 		}
@@ -294,7 +294,7 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 				(invoice.currency ?? "usd").toLowerCase(),
 				ownerAccountId,
 				{
-					rentalId,
+					hireId,
 					invoiceId: invoice.id,
 					payoutId: payoutRecord.id,
 				}
@@ -311,7 +311,7 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 				.where(eq(payouts.id, payoutRecord.id));
 
 			console.log("handleInvoicePaid: transfer created", {
-				rentalId,
+				hireId,
 				invoiceId: invoice.id,
 				transferId,
 				ownerAmount,
@@ -327,7 +327,7 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 				.where(eq(payouts.id, payoutRecord.id));
 
 			console.error("handleInvoicePaid: transfer failed", {
-				rentalId,
+				hireId,
 				invoiceId: invoice.id,
 				error,
 			});
@@ -340,8 +340,8 @@ async function handleInvoicePaid(stripe: Stripe, env: CloudflareBindings, event:
 
 async function handleChargeRefunded(event: Stripe.Event) {
 	const charge = getEventPayload<Stripe.Charge>(event);
-	const rentalId = charge.metadata?.rentalId;
-	if (!rentalId) return;
+	const hireId = charge.metadata?.hireId;
+	if (!hireId) return;
 
 	await db
 		.update(invoices)

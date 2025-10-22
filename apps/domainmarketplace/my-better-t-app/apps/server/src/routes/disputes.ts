@@ -186,14 +186,14 @@ router.get("/", requireAdmin, async (c) => {
 		const rows = await db
 			.select({
 				dispute: disputes,
-				rental: rentals,
+				hire: hires,
 				listing: listings,
 				domain: domains,
 				claimant: user,
 			})
 			.from(disputes)
-			.leftJoin(rentals, eq(disputes.rentalId, rentals.id))
-			.leftJoin(listings, eq(rentals.listingId, listings.id))
+			.leftJoin(hires, eq(disputes.hireId, hires.id))
+			.leftJoin(listings, eq(hires.listingId, listings.id))
 			.leftJoin(domains, eq(listings.domainId, domains.id))
 			.leftJoin(user, eq(disputes.claimantId, user.id))
 			.where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -215,14 +215,14 @@ router.get("/:id", requireAdmin, async (c) => {
 		const [row] = await db
 			.select({
 				dispute: disputes,
-				rental: rentals,
+				hire: hires,
 				listing: listings,
 				domain: domains,
 				claimant: user,
 			})
 			.from(disputes)
-			.leftJoin(rentals, eq(disputes.rentalId, rentals.id))
-			.leftJoin(listings, eq(rentals.listingId, listings.id))
+			.leftJoin(hires, eq(disputes.hireId, hires.id))
+			.leftJoin(listings, eq(hires.listingId, listings.id))
 			.leftJoin(domains, eq(listings.domainId, domains.id))
 			.leftJoin(user, eq(disputes.claimantId, user.id))
 			.where(eq(disputes.id, disputeId))
@@ -255,16 +255,16 @@ router.patch("/:id", requireAdmin, async (c) => {
 		const [disputeRow] = await db
 			.select({
 				dispute: disputes,
-				rental: rentals,
+				hire: hires,
 				listing: listings,
 				domain: domains,
 				invoice: invoices,
 			})
 			.from(disputes)
-			.leftJoin(rentals, eq(disputes.rentalId, rentals.id))
-			.leftJoin(listings, eq(rentals.listingId, listings.id))
+			.leftJoin(hires, eq(disputes.hireId, hires.id))
+			.leftJoin(listings, eq(hires.listingId, listings.id))
 			.leftJoin(domains, eq(listings.domainId, domains.id))
-			.leftJoin(invoices, eq(invoices.rentalId, rentals.id))
+			.leftJoin(invoices, eq(invoices.hireId, hires.id))
 			.where(eq(disputes.id, disputeId))
 			.limit(1);
 
@@ -277,7 +277,7 @@ router.patch("/:id", requireAdmin, async (c) => {
 		if (status === "resolved" && creditAmountCents && creditAmountCents > 0) {
 			const stripe = getStripeClient(c.env as CloudflareBindings);
 
-			if (disputeRow.rental?.type === "per_click") {
+			if (disputeRow.hire?.type === "per_click") {
 				if (!disputeRow.invoice?.stripeInvoiceId) {
 					return c.json({ error: "No invoice found for credit" }, 400);
 				}
@@ -288,11 +288,11 @@ router.patch("/:id", requireAdmin, async (c) => {
 					resolution,
 					{
 						disputeId,
-						rentalId: disputeRow.rental.id,
+						hireId: disputeRow.hire.id,
 						category: disputeRow.dispute.category ?? "other",
 					},
 				);
-			} else if (disputeRow.rental?.type === "period") {
+			} else if (disputeRow.hire?.type === "period") {
 				if (!disputeRow.invoice?.stripePaymentIntentId) {
 					return c.json({ error: "No payment intent found for refund" }, 400);
 				}
@@ -303,7 +303,7 @@ router.patch("/:id", requireAdmin, async (c) => {
 					"requested_by_customer",
 					{
 						disputeId,
-						rentalId: disputeRow.rental.id,
+						hireId: disputeRow.hire.id,
 						category: disputeRow.dispute.category ?? "other",
 					},
 				);
@@ -331,7 +331,7 @@ router.patch("/:id", requireAdmin, async (c) => {
 		return c.json(
 			toResponse({
 				dispute: updatedDispute,
-				rental: disputeRow.rental,
+				hire: disputeRow.hire,
 				listing: disputeRow.listing,
 				domain: disputeRow.domain,
 				claimant: null,
