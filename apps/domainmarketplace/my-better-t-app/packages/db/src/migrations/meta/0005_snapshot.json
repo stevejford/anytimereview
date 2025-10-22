@@ -820,7 +820,8 @@
           "name": "role",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'hirer'"
         },
         "email_verified": {
           "name": "email_verified",
