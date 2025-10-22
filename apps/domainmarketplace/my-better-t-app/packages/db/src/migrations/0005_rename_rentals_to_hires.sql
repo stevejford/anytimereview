@@ -13,6 +13,7 @@ DROP INDEX IF EXISTS "routes_rental_host_path_unique";
 DROP INDEX IF EXISTS "rentals_listing_id_idx";
 DROP INDEX IF EXISTS "rentals_renter_id_idx";
 DROP INDEX IF EXISTS "rentals_stripe_customer_id_idx";
+DROP INDEX IF EXISTS "hires_stripe_customer_id_idx";
 --> statement-breakpoint
 -- Defensive drop for routes unique constraint (in case it was created as constraint instead of index)
 ALTER TABLE "routes" DROP CONSTRAINT IF EXISTS "routes_rental_host_path_unique";
@@ -42,7 +43,8 @@ ALTER TABLE "routes" RENAME COLUMN "rental_id" TO "hire_id";
 -- Step 3: Recreate constraints with new names
 ALTER TABLE "hires" ADD CONSTRAINT "hires_type_check" CHECK ("hires"."type" in ('period', 'per_click'));
 ALTER TABLE "hires" ADD CONSTRAINT "hires_status_check" CHECK ("hires"."status" in ('active', 'ended', 'suspended'));
-ALTER TABLE "disputes" ADD CONSTRAINT "disputes_claimant_role_check" CHECK ("disputes"."claimant_role" in ('owner', 'hirer'));
+-- Transitional compatibility: allow both 'renter' and 'hirer' during rollout, tighten after downstream updates deployed
+ALTER TABLE "disputes" ADD CONSTRAINT "disputes_claimant_role_check" CHECK ("disputes"."claimant_role" in ('owner', 'renter', 'hirer'));
 ALTER TABLE "user" ADD CONSTRAINT "user_role_check" CHECK ("user"."role" in ('owner', 'hirer', 'admin'));
 --> statement-breakpoint
 -- Step 4: Recreate foreign key constraints
