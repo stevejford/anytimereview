@@ -1,0 +1,72 @@
+{
+  "name": "@my-better-t-app/db",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema/analytics": {
+      "types": "./dist/schema/analytics.d.ts",
+      "import": "./dist/schema/analytics.js"
+    },
+    "./schema/auth": {
+      "types": "./dist/schema/auth.d.ts",
+      "import": "./dist/schema/auth.js"
+    },
+    "./schema/billing": {
+      "types": "./dist/schema/billing.d.ts",
+      "import": "./dist/schema/billing.js"
+    },
+    "./schema/disputes": {
+      "types": "./dist/schema/disputes.d.ts",
+      "import": "./dist/schema/disputes.js"
+    },
+    "./schema/domains": {
+      "types": "./dist/schema/domains.d.ts",
+      "import": "./dist/schema/domains.js"
+    },
+    "./schema/listings": {
+      "types": "./dist/schema/listings.d.ts",
+      "import": "./dist/schema/listings.js"
+    },
+    "./schema/hires": {
+      "types": "./dist/schema/hires.d.ts",
+      "import": "./dist/schema/hires.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/seed.ts"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "drizzle-kit": "^0.31.2",
+    "tsdown": "catalog:",
+    "tsx": "^4.20.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@neondatabase/serverless": "^1.0.1",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "dotenv": "catalog:",
+    "drizzle-orm": "^0.44.2",
+    "react-hook-form": "^7.65.0",
+    "ws": "^8.18.3",
+    "zod": "catalog:"
+  }
+}
