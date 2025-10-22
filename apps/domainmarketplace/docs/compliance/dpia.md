@@ -5,7 +5,7 @@ Note: Working draft for privacy engineering. Final review required by counsel an
 Overview and Scope
 - Service: Domain hire marketplace with DNS onboarding and HTTP redirects; click analytics; payments and payouts.
 - Roles: Controller for marketplace accounts, routing configuration, analytics; Processor roles may apply where operating on behalf of Owners for billing analytics.
-- Individuals affected: Owners, hirers, end visitors to rented domains.
+- Individuals affected: Owners, hirers, end visitors to hired domains.
 
 Processing Purposes and Lawful Bases
 - Provide service features (accounts, listings, routing, billing) — Contract (GDPR Art. 6(1)(b)).

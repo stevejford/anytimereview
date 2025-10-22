@@ -1,7 +1,7 @@
 # Redirector Worker
 
 ## Overview
-The redirector worker serves the edge redirect layer for the domain hire marketplace. It resolves custom hosts and paths to hire destinations, applies bot detection safeguards, deduplicates rapid-fire clicks, and streams telemetry into the analytics engine as defined in [ADR-0001](../../docs/architecture/adrs/adr-0001-edge-routing.md) and [ADR-0002](../../docs/architecture/adrs/adr-0002-click-telemetry-store.md).
+The redirector worker serves the edge redirect layer for the domain hire marketplace. It resolves custom hosts and paths to hire destinations, applies bot detection safeguards, deduplicates rapid-fire clicks, and streams telemetry into the analytics engine as defined in [ADR-0001](../../../docs/architecture/adrs/adr-0001-edge-routing.md) and [ADR-0002](../../../docs/architecture/adrs/adr-0002-click-telemetry-store.md).
 
 ## Architecture
 - Workers KV stores hot routing entries keyed by `host:path` with a root fallback.
@@ -58,17 +58,17 @@ The redirector includes automatic dependency management:
 - Update the `VERIFIED_BOT_ALLOWLIST` var in Wrangler when bot policy changes.
 
 ## Performance
-- Adheres to the sub-20ms p95 latency budget from [`performance-budgets.md`](../../docs/architecture/performance-budgets.md).
+- Adheres to the sub-20ms p95 latency budget from [`performance-budgets.md`](../../../docs/architecture/performance-budgets.md).
 - Hot path performs a single KV read followed by an immediate redirect response.
 - Deduplication and analytics logging run asynchronously via `waitUntil`, keeping network calls off the response path while preserving accuracy.
 
 ## Bot Detection & Trust
-- IVT policy tiers from [`ivt-policy.md`](../../docs/trust-safety/ivt-policy.md) mark Tier A invalid traffic and Tier B suspected traffic.
+- IVT policy tiers from [`ivt-policy.md`](../../../docs/trust-safety/ivt-policy.md) mark Tier A invalid traffic and Tier B suspected traffic.
 - Duplicate clicks flagged via KV TTL keys are recorded but marked invalid in analytics.
 
 ## Monitoring
-- Analytics Engine provides click observability; query guidelines live in [`observability.md`](../../docs/ops/observability.md).
-- Pair with runbooks in [`error-budgets.md`](../../docs/ops/error-budgets.md) for remediation thresholds.
+- Analytics Engine provides click observability; query guidelines live in [`observability.md`](../../../docs/ops/observability.md).
+- Pair with runbooks in [`error-budgets.md`](../../../docs/ops/error-budgets.md) for remediation thresholds.
 
 ## Troubleshooting
 

@@ -6,11 +6,11 @@ Last updated: 2025-10-18
 
 1) Acceptance and Definitions
 - By using the platform (the “Service”), you agree to these Terms.
-- “Owner” lists a domain for hire. “Hirer” rents a domain or path slugs. “User Content” includes routing targets, landing pages, listings, and any materials you submit.
+- “Owner” lists a domain for hire. “Hirer” hires a domain or path slugs. “User Content” includes routing targets, landing pages, listings, and any materials you submit.
 - We provide a marketplace and routing infrastructure. We are not a registrar and do not sell domains unless explicitly stated.
 
 2) Service Description; Marketplace Role
-- The Service enables Owners to list domains and Hirers to rent them for campaigns (exclusive or via slugs). We provide DNS onboarding guidance, edge routing (HTTP redirects), analytics, and payments tooling.
+- The Service enables Owners to list domains and Hirers to hire them for campaigns (exclusive or via slugs). We provide DNS onboarding guidance, edge routing (HTTP redirects), analytics, and payments tooling.
 - We do not host Hirer landing pages. Hirers are responsible for their content and destinations.
 - We may provide temporary or permanent redirect options; SEO outcomes are not guaranteed.
 

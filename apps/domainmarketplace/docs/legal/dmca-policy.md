@@ -40,4 +40,5 @@ Note: This draft must be reviewed by counsel. For U.S. services, designate an ag
 
 References
 - USCO DMCA Agent Registration: docs/compliance/dpia.md (see processors)
+- Related Policies: docs/legal/terms-of-service.md, docs/legal/acceptable-use-policy.md
 

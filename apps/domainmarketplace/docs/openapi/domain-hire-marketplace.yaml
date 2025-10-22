@@ -184,7 +184,7 @@ paths:
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Domain' } } } }
         '404': { description: Not Found }
-  /api/listings:
+  /api/v1/listings:
     get:
       summary: Search listings
       parameters:
@@ -215,7 +215,7 @@ paths:
                 priceClickCents: { type: integer, nullable: true }
       responses:
         '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Listing' } } } }
-  /api/listings/{id}:
+  /api/v1/listings/{id}:
     get:
       summary: Get listing
       parameters:
@@ -243,7 +243,7 @@ paths:
                 status: { type: string, enum: [draft, active, paused] }
       responses:
         '200': { description: OK }
-  /api/hires:
+  /api/v1/hires:
     post:
       summary: Create hire
       requestBody:
@@ -258,7 +258,7 @@ paths:
                 type: { type: string, enum: [period, per_click] }
       responses:
         '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Hire' } } } }
-  /api/hires/{id}:
+  /api/v1/hires/{id}:
     get:
       summary: Get hire
       parameters:
@@ -269,7 +269,7 @@ paths:
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Hire' } } } }
         '404': { description: Not Found }
-  /api/hires/{id}/routes:
+  /api/v1/hires/{id}/routes:
     get:
       summary: List routes for hire
       parameters:
@@ -306,7 +306,7 @@ paths:
                 redirectCode: { type: integer, enum: [301, 302, 307, 308] }
       responses:
         '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Route' } } } }
-  /api/hires/{id}/routes/{routeId}:
+  /api/v1/hires/{id}/routes/{routeId}:
     patch:
       summary: Update hire route
       parameters:
@@ -344,7 +344,7 @@ paths:
           schema: { type: string }
       responses:
         '204': { description: No Content }
-  /api/hires/{id}/routes/bulk:
+  /api/v1/hires/{id}/routes/bulk:
     post:
       summary: Bulk create hire routes
       parameters:
@@ -396,7 +396,7 @@ paths:
                       total: { type: integer }
                       created: { type: integer }
                       failed: { type: integer }
-  /api/hires/{id}/analytics:
+  /api/v1/hires/{id}/analytics:
     get:
       summary: Analytics summary
       parameters:
@@ -409,7 +409,7 @@ paths:
           schema: { type: string, example: '30d' }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/AnalyticsSummary' } } } }
-  /api/billing/period/checkout:
+  /api/v1/billing/period/checkout:
     post:
       summary: Start period hire checkout
       requestBody:
@@ -423,7 +423,7 @@ paths:
                 hireId: { type: string }
       responses:
         '200': { description: OK }
-  /api/billing/usage/report:
+  /api/v1/billing/usage/report:
     post:
       summary: Report usage (internal)
       requestBody:
@@ -438,7 +438,7 @@ paths:
                 clicks: { type: integer }
       responses:
         '202': { description: Accepted }
-  /api/webhooks/stripe:
+  /api/v1/webhooks/stripe:
     post:
       summary: Stripe webhook
       security: []

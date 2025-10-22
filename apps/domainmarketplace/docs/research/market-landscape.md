@@ -1,13 +1,13 @@
 # Market Landscape — Domain hire Marketplace
 
 Purpose
-- Compare adjacent products, summarize pricing models, and clarify differentiation for an MVP “rent a domain or slug” platform.
+- Compare adjacent products, summarize pricing models, and clarify differentiation for an MVP “hire a domain or slug” platform.
 
 Scope
 - Adjacent categories: domain parking, domain marketplaces (incl. lease‑to‑own), link management/redirect SaaS, rank‑and‑rent SEO services.
 
 Summary & Positioning
-- Your product rents entire domains (exclusive) or path slugs (shared), with self‑serve onboarding, edge redirects, validated click analytics, and flexible billing (period or per‑click). Positioned between traditional domain parking/sales (owner monetizes via ads or sells) and link SaaS (brand manages its own domain).
+- Your product hires out entire domains (exclusive) or path slugs (shared), with self‑serve onboarding, edge redirects, validated click analytics, and flexible billing (period or per‑click). Positioned between traditional domain parking/sales (owner monetizes via ads or sells) and link SaaS (brand manages its own domain).
 
 Comparators (by category)
 - Domain Parking/Monetization

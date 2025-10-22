@@ -46,7 +46,7 @@
 **Solution**: Created shared helper function
 - Created new file `apps/web/src/lib/listings.ts` with `getListingById(id)` function
 - Updated detail page to use `queryFn: () => getListingById(listingId!)`
-- Rent page continues to use `enabled` guard to skip fetching for seed IDs
+- Hire page continues to use `enabled` guard to skip fetching for seed IDs
 - Centralized seed handling logic in one place
 
 **Files Created**:
@@ -85,7 +85,7 @@ pnpm --filter @my-better-t-app/db build
 ## Summary
 
 All 4 verification comments have been successfully implemented:
-1. ✅ Prevented unnecessary API calls for seed listings on rent page
+1. ✅ Prevented unnecessary API calls for seed listings on hire page
 2. ✅ Added build configuration with watch_dirs to Wrangler config
 3. ✅ Optimized TypeScript resolution by removing paths mapping
 4. ✅ Created shared helper to centralize listing fetch logic

@@ -4,7 +4,7 @@ Purpose
 - Define how we detect Invalid Traffic (IVT), how it impacts billing, and how credits/disputes are handled. Aligns with IAB/MRC concepts of GIVT (general/known) and SIVT (sophisticated).
 
 Scope
-- Applies to per‑click metered billing and analytics. Period rentals are governed by availability SLAs (see disputes-and-credits.md).
+- Applies to per‑click metered billing and analytics. Period hires are governed by availability SLAs (see disputes-and-credits.md).
 
 Definitions
 - GIVT (General/Known): traffic from known spiders/bots or deterministic non‑human sources (e.g., IAB list, verified bots, headless test tools).

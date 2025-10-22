@@ -150,7 +150,7 @@ Three custom shadow utilities are defined in `index.css`:
 
 ## Mode Switching System
 
-The application features a dual-mode system allowing users to switch between **Browse Mode** (renting domains) and **Host Mode** (listing domains).
+The application features a dual-mode system allowing users to switch between **Browse Mode** (hiring domains) and **Host Mode** (listing domains).
 
 ### Architecture
 
@@ -976,7 +976,7 @@ graph TD
     P --> Q[Redirect to /host/domains]
 \`\`\`
 
-### Browse and Rent Flow
+### Browse and Hire Flow
 
 \`\`\`mermaid
 graph TD
