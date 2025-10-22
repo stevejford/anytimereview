@@ -986,7 +986,7 @@ graph TD
     D --> E[View Domain Details]
     E --> F{Authenticated?}
     F -->|No| G[Prompt to Sign In]
-    F -->|Yes| H[Click Rent Domain]
+    F -->|Yes| H[Click Hire Domain]
     G --> I[Sign In/Sign Up]
     I --> H
     H --> J[Select hire Type]
