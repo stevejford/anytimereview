@@ -1,12 +1,12 @@
 # UDRP Workflow
 
-Note: We are not the registrar and do not control domain ownership transfers. We facilitate routing. This workflow addresses complaints that a listed or rented domain allegedly violates a third party’s rights.
+Note: We are not the registrar and do not control domain ownership transfers. We facilitate routing. This workflow addresses complaints that a listed or hired domain allegedly violates a third party’s rights.
 
 1) Intake
 - Accept complaints and notices from approved UDRP providers or counsel. Log ticket with domain, complainant, provider reference, and deadlines.
 
 2) Verification
-- Verify the domain is listed on the platform and identify the Owner and any active Rentals.
+- Verify the domain is listed on the platform and identify the Owner and any active Hires.
 - Confirm whether we can modify routing (we do) vs. domain ownership (we do not).
 
 3) Initial Action (Hold/Suspension)
@@ -14,7 +14,7 @@ Note: We are not the registrar and do not control domain ownership transfers. We
 - Preserve logs and records (routes, click logs, communications).
 
 4) Notifications
-- Notify the Owner and active Renters of the complaint and the hold. Provide basic information and timeline.
+- Notify the Owner and active Hirers of the complaint and the hold. Provide basic information and timeline.
 - Provide a copy of the complaint where permissible.
 
 5) Cooperation

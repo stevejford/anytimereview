@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
-import { getRentals, type Rental } from "@/lib/api-client";
+import { getHires, type Hire } from "@/lib/api-client";
 import {
 	Card,
 	CardContent,
@@ -39,7 +39,7 @@ import {
 	LogIn,
 } from "lucide-react";
 
-export default function RentalsPage() {
+export default function HiresPage() {
 	const { isSignedIn, isLoaded } = useUser();
 	const [statusFilter, setStatusFilter] = React.useState("all");
 
@@ -51,8 +51,8 @@ export default function RentalsPage() {
 				<div className="mt-12">
 					<EmptyState
 						icon={<LogIn className="text-primary" />}
-						title="Sign in to view your rentals"
-						description="You need to be signed in to view and manage your domain rentals. Sign in or create an account to get started."
+						title="Sign in to view your hires"
+						description="You need to be signed in to view and manage your domain hires. Sign in or create an account to get started."
 						action={{
 							label: "Sign In",
 							onClick: () => (window.location.href = "/sign-in"),
@@ -63,46 +63,46 @@ export default function RentalsPage() {
 		);
 	}
 
-	// Fetch rentals
+	// Fetch hires
 	const {
-		data: rentals,
+		data: hires,
 		isLoading,
 		error,
 		refetch,
 	} = useQuery({
-		queryKey: ["rentals", statusFilter],
+		queryKey: ["hires", statusFilter],
 		queryFn: () =>
-			statusFilter === "all" ? getRentals() : getRentals({ status: statusFilter }),
+			statusFilter === "all" ? getHires() : getHires({ status: statusFilter }),
 	});
 
 	// Calculate counts
 	const counts = React.useMemo(() => {
-		if (!rentals) return { active: 0, ended: 0, suspended: 0, total: 0 };
+		if (!hires) return { active: 0, ended: 0, suspended: 0, total: 0 };
 		return {
-			active: rentals.filter((r) => r.status === "active").length,
-			ended: rentals.filter((r) => r.status === "ended").length,
-			suspended: rentals.filter((r) => r.status === "suspended").length,
-			total: rentals.length,
+			active: hires.filter((h) => h.status === "active").length,
+			ended: hires.filter((h) => h.status === "ended").length,
+			suspended: hires.filter((h) => h.status === "suspended").length,
+			total: hires.length,
 		};
-	}, [rentals]);
+	}, [hires]);
 
 	// Calculate metrics
 	const metrics = React.useMemo(() => {
-		if (!rentals) return { totalClicks: 0, monthlySpending: 0 };
-		const totalClicks = rentals.reduce((sum, r) => sum + (r.totalClicks || 0), 0);
+		if (!hires) return { totalClicks: 0, monthlySpending: 0 };
+		const totalClicks = hires.reduce((sum, h) => sum + (h.totalClicks || 0), 0);
 		// Simplified monthly spending calculation
-		const monthlySpending = rentals
-			.filter((r) => r.status === "active")
-			.reduce((sum, r) => {
-				if (r.type === "period" && r.listing?.pricePeriodCents) {
-					return sum + r.listing.pricePeriodCents / 100;
+		const monthlySpending = hires
+			.filter((h) => h.status === "active")
+			.reduce((sum, h) => {
+				if (h.type === "period" && h.listing?.pricePeriodCents) {
+					return sum + h.listing.pricePeriodCents / 100;
 				}
 				return sum;
 			}, 0);
 		return { totalClicks, monthlySpending };
-	}, [rentals]);
+	}, [hires]);
 
-	// Calculate time remaining for active rentals
+	// Calculate time remaining for active hires
 	const getTimeRemaining = (endAt: string | null) => {
 		if (!endAt) return "Active";
 		const end = new Date(endAt);
@@ -116,15 +116,15 @@ export default function RentalsPage() {
 
 	// Filter upcoming renewals (ending in next 7 days)
 	const upcomingRenewals = React.useMemo(() => {
-		if (!rentals) return [];
+		if (!hires) return [];
 		const now = new Date();
 		const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-		return rentals.filter((r) => {
-			if (r.status !== "active" || !r.endAt) return false;
-			const endDate = new Date(r.endAt);
+		return hires.filter((h) => {
+			if (h.status !== "active" || !h.endAt) return false;
+			const endDate = new Date(h.endAt);
 			return endDate > now && endDate <= sevenDaysFromNow;
 		});
-	}, [rentals]);
+	}, [hires]);
 
 	return (
 		<div className="container mx-auto max-w-7xl px-4 py-8">
@@ -134,9 +134,9 @@ export default function RentalsPage() {
 				{/* Header */}
 				<div className="flex items-center justify-between">
 					<div>
-						<h1 className="mb-2 text-3xl font-bold">My Rentals</h1>
+						<h1 className="mb-2 text-3xl font-bold">My Hires</h1>
 						<p className="text-muted-foreground">
-							Manage your active domain rentals and track performance
+							Manage your active domain hires and track performance
 						</p>
 					</div>
 					<Button asChild variant="outline">
@@ -149,7 +149,7 @@ export default function RentalsPage() {
 					<Alert variant="destructive">
 						<AlertCircle className="h-4 w-4" />
 						<AlertDescription>
-							Unable to load rentals. Please try again.
+							Unable to load hires. Please try again.
 							<Button variant="outline" size="sm" onClick={() => refetch()} className="ml-4">
 								Retry
 							</Button>
@@ -158,13 +158,13 @@ export default function RentalsPage() {
 				)}
 
 				{/* Summary Cards */}
-				{!isLoading && rentals && rentals.length > 0 && (
+				{!isLoading && hires && hires.length > 0 && (
 					<div className="grid gap-6 md:grid-cols-3">
 						<Card>
 							<CardContent className="pt-6 text-center">
 								<Activity className="mx-auto mb-2 h-8 w-8 text-primary" />
 								<p className="mb-1 text-3xl font-bold text-primary">{counts.active}</p>
-								<p className="text-sm text-muted-foreground">Active Rentals</p>
+								<p className="text-sm text-muted-foreground">Active Hires</p>
 							</CardContent>
 						</Card>
 						<Card>
@@ -197,24 +197,24 @@ export default function RentalsPage() {
 								<CardTitle className="text-lg">Upcoming Renewals</CardTitle>
 							</div>
 							<CardDescription>
-								{upcomingRenewals.length} rental{upcomingRenewals.length === 1 ? "" : "s"} ending in the next 7 days
+								{upcomingRenewals.length} hire{upcomingRenewals.length === 1 ? "" : "s"} ending in the next 7 days
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div className="space-y-3">
-								{upcomingRenewals.map((rental) => (
+								{upcomingRenewals.map((hire) => (
 									<div
-										key={rental.id}
+										key={hire.id}
 										className="flex items-center justify-between rounded-lg border bg-background p-3"
 									>
 										<div className="flex-1">
-											<p className="font-medium">{rental.listing?.domain?.fqdn || "Unknown Domain"}</p>
+											<p className="font-medium">{hire.listing?.domain?.fqdn || "Unknown Domain"}</p>
 											<p className="text-sm text-muted-foreground">
-												Ends {rental.endAt ? new Date(rental.endAt).toLocaleDateString() : "Unknown"}
+												Ends {hire.endAt ? new Date(hire.endAt).toLocaleDateString() : "Unknown"}
 											</p>
 										</div>
 										<Button asChild size="sm" variant="secondary">
-											<Link href={`/dashboard/rentals/${rental.id}`}>
+											<Link href={`/dashboard/hires/${hire.id}`}>
 												Extend Now
 											</Link>
 										</Button>
@@ -229,7 +229,7 @@ export default function RentalsPage() {
 				<Tabs value={statusFilter} onValueChange={setStatusFilter}>
 					<TabsList>
 						<TabsTrigger value="all">
-							All Rentals
+							All Hires
 							{counts.total > 0 && (
 								<Badge variant="secondary" className="ml-2">
 									{counts.total}
@@ -282,11 +282,11 @@ export default function RentalsPage() {
 						)}
 
 						{/* Empty State */}
-						{!isLoading && (!rentals || rentals.length === 0) && (
+						{!isLoading && (!hires || hires.length === 0) && (
 							<EmptyState
 								icon={<FileText className="text-primary" />}
-								title="No rentals yet"
-								description="You haven't rented any domains yet. Browse our marketplace to find the perfect domain for your campaign."
+								title="No hires yet"
+								description="You haven't hired any domains yet. Browse our marketplace to find the perfect domain for your campaign."
 								action={{
 									label: "Browse Domains",
 									onClick: () => (window.location.href = "/browse"),
@@ -294,12 +294,12 @@ export default function RentalsPage() {
 							/>
 						)}
 
-						{/* Trips Grid */}
-						{!isLoading && rentals && rentals.length > 0 && (
+						{/* Hires Grid */}
+						{!isLoading && hires && hires.length > 0 && (
 							<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-								{rentals.map((rental) => (
+								{hires.map((hire) => (
 									<Card
-										key={rental.id}
+										key={hire.id}
 										className="group flex flex-col justify-between transition-all duration-200 hover:border-primary hover:shadow-lg"
 									>
 										<CardHeader>
@@ -307,27 +307,27 @@ export default function RentalsPage() {
 												<div className="flex items-center gap-2">
 													<Globe className="h-5 w-5 text-primary" />
 													<CardTitle className="text-lg">
-														{rental.listing?.domain?.fqdn || "Unknown Domain"}
+														{hire.listing?.domain?.fqdn || "Unknown Domain"}
 													</CardTitle>
 												</div>
 												<Badge
 													variant={
-														rental.status === "active"
+														hire.status === "active"
 															? "default"
-															: rental.status === "suspended"
+															: hire.status === "suspended"
 															? "destructive"
 															: "secondary"
 													}
 													className="gap-1"
 												>
-													{rental.status === "active" && <Activity className="h-3 w-3" />}
-													{rental.status === "suspended" && <AlertCircle className="h-3 w-3" />}
-													{rental.status === "ended" && <Calendar className="h-3 w-3" />}
-													{rental.status.charAt(0).toUpperCase() + rental.status.slice(1)}
+													{hire.status === "active" && <Activity className="h-3 w-3" />}
+													{hire.status === "suspended" && <AlertCircle className="h-3 w-3" />}
+													{hire.status === "ended" && <Calendar className="h-3 w-3" />}
+													{hire.status.charAt(0).toUpperCase() + hire.status.slice(1)}
 												</Badge>
 											</div>
 											<Badge variant="secondary" className="w-fit">
-												{rental.type === "period" ? "Monthly" : "Per Click"}
+												{hire.type === "period" ? "Monthly" : "Per Click"}
 											</Badge>
 										</CardHeader>
 
@@ -335,31 +335,31 @@ export default function RentalsPage() {
 											<div className="space-y-1 text-sm">
 												<div className="flex items-center gap-2 text-muted-foreground">
 													<Calendar className="h-4 w-4" />
-													<span>Started {new Date(rental.startAt).toLocaleDateString()}</span>
+													<span>Started {new Date(hire.startAt).toLocaleDateString()}</span>
 												</div>
-												{rental.status === "active" && (
+												{hire.status === "active" && (
 													<p className="text-primary font-medium">
-														{getTimeRemaining(rental.endAt)}
+														{getTimeRemaining(hire.endAt)}
 													</p>
 												)}
-												{rental.status === "ended" && rental.endAt && (
+												{hire.status === "ended" && hire.endAt && (
 													<p className="text-muted-foreground">
-														Ended {new Date(rental.endAt).toLocaleDateString()}
+														Ended {new Date(hire.endAt).toLocaleDateString()}
 													</p>
 												)}
 											</div>
 
-											{rental.totalClicks !== undefined && (
+											{hire.totalClicks !== undefined && (
 												<div className="flex items-center gap-2">
 													<Badge variant="outline" className="gap-1">
 														<Activity className="h-3 w-3" />
-														{rental.totalClicks.toLocaleString()} clicks
+														{hire.totalClicks.toLocaleString()} clicks
 													</Badge>
 												</div>
 											)}
 
 											<p className="text-xs text-muted-foreground">
-												{rental.listing?.mode === "exclusive"
+												{hire.listing?.mode === "exclusive"
 													? "Exclusive access"
 													: "Shared slugs"}
 											</p>
@@ -367,12 +367,12 @@ export default function RentalsPage() {
 
 										<CardFooter className="flex gap-2">
 											<Button asChild size="sm" variant="outline">
-												<Link href={`/dashboard/rentals/${rental.id}/routes`}>
+												<Link href={`/dashboard/hires/${hire.id}/routes`}>
 													Manage Routes
 												</Link>
 											</Button>
 											<Button asChild size="sm" className="flex-1">
-												<Link href={`/dashboard/rentals/${rental.id}/analytics`}>
+												<Link href={`/dashboard/hires/${hire.id}/analytics`}>
 													<BarChart3 className="mr-2 h-4 w-4" />
 													View Analytics
 												</Link>
@@ -385,15 +385,15 @@ export default function RentalsPage() {
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
 													<DropdownMenuItem asChild>
-														<Link href={`/dashboard/rentals/${rental.id}`}>
+														<Link href={`/dashboard/hires/${hire.id}`}>
 															View Details
 														</Link>
 													</DropdownMenuItem>
-													{rental.status === "active" && (
+													{hire.status === "active" && (
 														<>
-															<DropdownMenuItem>Extend Rental</DropdownMenuItem>
+															<DropdownMenuItem>Extend Hire</DropdownMenuItem>
 															<DropdownMenuItem className="text-destructive">
-																Cancel Rental
+																Cancel Hire
 															</DropdownMenuItem>
 														</>
 													)}

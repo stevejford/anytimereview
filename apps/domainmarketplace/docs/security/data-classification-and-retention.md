@@ -15,7 +15,7 @@ Inventory and Windows
 - Support tickets (Sensitive): retain 24 months (unless legal hold)
 
 Storage Locations
-- Neon (SoR): accounts, listings, rentals, payouts, disputes, rollups
+- Neon (SoR): accounts, listings, hires, payouts, disputes, rollups
 - Workers KV: hot route maps (no PII)
 - Analytics Engine: raw click events (pseudonymized identifiers)
 - Stripe: payments and payouts

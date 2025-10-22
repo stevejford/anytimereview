@@ -12,21 +12,21 @@ import { CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import type { Listing } from "@/lib/api-client";
 
-interface RenterCheckoutWizardProps {
+interface HirerCheckoutWizardProps {
 	listing: Listing;
-	onComplete?: (rentalId: string) => void;
+	onComplete?: (hireId: string) => void;
 }
 
-export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWizardProps) {
+export function HirerCheckoutWizard({ listing, onComplete }: HirerCheckoutWizardProps) {
 	const router = useRouter();
 	const [currentStep, setCurrentStep] = React.useState(0);
 	const [isLoading, setIsLoading] = React.useState(false);
 
 	// Step 1: Type Selection
-	const [rentalType, setRentalType] = React.useState<"period" | "per_click">("period");
+	const [hireType, setHireType] = React.useState<"period" | "per_click">("period");
 
 	// Step 2: Configuration
-	const [rentalMonths, setRentalMonths] = React.useState("1");
+	const [hireMonths, setHireMonths] = React.useState("1");
 	const [destinationUrl, setDestinationUrl] = React.useState("");
 
 	// Step 3: Billing (for period) or Activation (for per-click)
@@ -38,9 +38,9 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 	// Auto-select type if only one is available
 	React.useEffect(() => {
 		if (hasPeriodPricing && !hasClickPricing) {
-			setRentalType("period");
+			setHireType("period");
 		} else if (!hasPeriodPricing && hasClickPricing) {
-			setRentalType("per_click");
+			setHireType("per_click");
 		}
 	}, [hasPeriodPricing, hasClickPricing]);
 
@@ -58,14 +58,14 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 		// Simulate API call
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		setIsLoading(false);
-		
-		const mockRentalId = `rental-${Date.now()}`;
-		toast.success("Rental created successfully");
-		
+
+		const mockHireId = `hire-${Date.now()}`;
+		toast.success("Hire created successfully");
+
 		if (onComplete) {
-			onComplete(mockRentalId);
+			onComplete(mockHireId);
 		} else {
-			router.push("/dashboard/rentals");
+			router.push("/dashboard/hires");
 		}
 	};
 
@@ -79,8 +79,8 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 	};
 
 	const calculateTotal = () => {
-		if (rentalType === "period") {
-			const months = parseInt(rentalMonths) || 1;
+		if (hireType === "period") {
+			const months = parseInt(hireMonths) || 1;
 			const monthlyPrice = listing.pricePeriodCents || 0;
 			return formatPrice(monthlyPrice * months);
 		}
@@ -90,18 +90,18 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 	const steps: WizardStep[] = [
 		{
 			id: "type",
-			title: "Select Rental Type",
-			description: "Choose how you want to rent this domain",
+			title: "Select Hire Type",
+			description: "Choose how you want to hire this domain",
 			content: (
 				<div className="space-y-4">
-					<RadioGroup value={rentalType} onValueChange={(value) => setRentalType(value as typeof rentalType)}>
+					<RadioGroup value={hireType} onValueChange={(value) => setHireType(value as typeof hireType)}>
 						{hasPeriodPricing && (
 							<div className="flex items-center space-x-2 rounded-lg border p-4">
 								<RadioGroupItem value="period" id="period-type" />
 								<Label htmlFor="period-type" className="flex-1 cursor-pointer space-y-1">
-									<div className="font-medium">Monthly Rental</div>
+									<div className="font-medium">Monthly Hire</div>
 									<div className="text-sm text-muted-foreground">
-										{formatPrice(listing.pricePeriodCents)} per month - Pay upfront for your rental period
+										{formatPrice(listing.pricePeriodCents)} per month - Pay upfront for your hire period
 									</div>
 								</Label>
 							</div>
@@ -110,7 +110,7 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 							<div className="flex items-center space-x-2 rounded-lg border p-4">
 								<RadioGroupItem value="per_click" id="click-type" />
 								<Label htmlFor="click-type" className="flex-1 cursor-pointer space-y-1">
-									<div className="font-medium">Per-Click Rental</div>
+									<div className="font-medium">Per-Click Hire</div>
 									<div className="text-sm text-muted-foreground">
 										{formatPrice(listing.priceClickCents)} per click - Pay only for traffic you receive
 									</div>
@@ -123,24 +123,24 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 		},
 		{
 			id: "config",
-			title: "Configure Rental",
-			description: "Set up your rental details",
+			title: "Configure Hire",
+			description: "Set up your hire details",
 			content: (
 				<div className="space-y-6">
-					{rentalType === "period" && (
+					{hireType === "period" && (
 						<div className="space-y-2">
-							<Label htmlFor="months">Rental Period (Months)</Label>
+							<Label htmlFor="months">Hire Period (Months)</Label>
 							<Input
 								id="months"
 								type="number"
 								placeholder="1"
-								value={rentalMonths}
-								onChange={(e) => setRentalMonths(e.target.value)}
+								value={hireMonths}
+								onChange={(e) => setHireMonths(e.target.value)}
 								min="1"
 								max="12"
 							/>
 							<p className="text-xs text-muted-foreground">
-								Choose how many months you want to rent this domain
+								Choose how many months you want to hire this domain
 							</p>
 						</div>
 					)}
@@ -160,7 +160,7 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 					<Alert>
 						<AlertDescription>
 							<strong>Total:</strong> {calculateTotal()}
-							{rentalType === "per_click" && " (billed monthly based on clicks received)"}
+							{hireType === "per_click" && " (billed monthly based on clicks received)"}
 						</AlertDescription>
 					</Alert>
 				</div>
@@ -168,17 +168,17 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 		},
 		{
 			id: "payment",
-			title: rentalType === "period" ? "Payment" : "Activation",
-			description: rentalType === "period" ? "Complete your payment" : "Activate your rental",
+			title: hireType === "period" ? "Payment" : "Activation",
+			description: hireType === "period" ? "Complete your payment" : "Activate your hire",
 			content: (
 				<div className="space-y-6">
 					{paymentConfirmed ? (
 						<Alert>
 							<CheckCircle2 className="h-4 w-4" />
 							<AlertDescription>
-								{rentalType === "period" 
-									? "Payment confirmed! Your rental is ready to activate."
-									: "Your rental is activated and ready to use."}
+								{hireType === "period"
+									? "Payment confirmed! Your hire is ready to activate."
+									: "Your hire is activated and ready to use."}
 							</AlertDescription>
 						</Alert>
 					) : (
@@ -190,12 +190,12 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 								</div>
 								<div className="flex justify-between">
 									<span className="text-sm">Type:</span>
-									<span className="text-sm font-medium capitalize">{rentalType === "period" ? "Monthly" : "Per-Click"}</span>
+									<span className="text-sm font-medium capitalize">{hireType === "period" ? "Monthly" : "Per-Click"}</span>
 								</div>
-								{rentalType === "period" && (
+								{hireType === "period" && (
 									<div className="flex justify-between">
 										<span className="text-sm">Duration:</span>
-										<span className="text-sm font-medium">{rentalMonths} month(s)</span>
+										<span className="text-sm font-medium">{hireMonths} month(s)</span>
 									</div>
 								)}
 								<div className="flex justify-between border-t pt-3">
@@ -203,7 +203,7 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 									<span className="font-bold">{calculateTotal()}</span>
 								</div>
 							</div>
-							{rentalType === "period" ? (
+							{hireType === "period" ? (
 								<>
 									<Alert>
 										<AlertDescription>
@@ -216,7 +216,7 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 								</>
 							) : (
 								<Button onClick={handlePayment} disabled={isLoading} className="w-full">
-									{isLoading ? "Activating..." : "Activate Rental"}
+									{isLoading ? "Activating..." : "Activate Hire"}
 								</Button>
 							)}
 						</>
@@ -238,8 +238,8 @@ export function RenterCheckoutWizard({ listing, onComplete }: RenterCheckoutWiza
 				paymentConfirmed
 			}
 			isLoading={isLoading}
-			title="Rent Domain"
-			description={`Complete your rental for ${listing.domain?.fqdn || "this domain"}`}
+			title="Hire Domain"
+			description={`Complete your hire for ${listing.domain?.fqdn || "this domain"}`}
 		/>
 	);
 }

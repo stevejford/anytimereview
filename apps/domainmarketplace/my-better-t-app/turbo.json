@@ -1,0 +1,73 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**", ".next/**", ".wrangler/**"]
+		},
+		"@my-better-t-app/db#build": {
+			"outputs": ["dist/**"],
+			"inputs": ["src/**/*.ts", "drizzle.config.ts"]
+		},
+		"redirector#build": {
+		"dependsOn": ["@my-better-t-app/db#build"],
+		"outputs": [".wrangler/**", "dist/**"]
+	},
+	"aggregator#build": {
+		"dependsOn": ["@my-better-t-app/db#build"],
+		"outputs": [".wrangler/**", "dist/**"]
+	},
+	"usage-reporter#build": {
+			"dependsOn": ["@my-better-t-app/db#build"],
+			"outputs": [".wrangler/**", "dist/**"]
+		},
+		"redirector#dev": {
+		"dependsOn": ["@my-better-t-app/db#build"],
+		"cache": false,
+		"persistent": true
+	},
+	"aggregator#dev": {
+		"dependsOn": ["@my-better-t-app/db#build"],
+		"cache": false,
+		"persistent": true
+	},
+	"usage-reporter#dev": {
+		"dependsOn": ["@my-better-t-app/db#build"],
+		"cache": false,
+		"persistent": true
+	},
+	"server#dev": {
+			"dependsOn": ["@my-better-t-app/db#build"],
+			"cache": false,
+			"persistent": true
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"check-types": {
+			"dependsOn": ["^check-types"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:push": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:studio": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:migrate": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:generate": {
+			"cache": false,
+			"persistent": true
+		}
+	}
+}

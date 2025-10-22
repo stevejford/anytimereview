@@ -1,0 +1,52 @@
+{
+  "name": "my-better-t-app",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "biome check --write .",
+    "prepare": "husky",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "dev:aggregator": "turbo -F aggregator dev",
+    "dev:server": "turbo -F server dev",
+    "dev:redirector": "turbo -F redirector dev",
+    "build:aggregator": "turbo -F aggregator build",
+    "build:redirector": "turbo -F redirector build",
+    "deploy:aggregator": "turbo -F aggregator deploy",
+    "deploy:redirector": "turbo -F redirector deploy",
+    "db:push": "turbo -F @my-better-t-app/db db:push",
+    "db:studio": "turbo -F @my-better-t-app/db db:studio",
+    "db:generate": "turbo -F @my-better-t-app/db db:generate",
+    "db:migrate": "turbo -F @my-better-t-app/db db:migrate"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
+    "dotenv": "catalog:",
+    "drizzle-orm": "^0.44.2",
+    "pg": "^8.16.3",
+    "wrangler": "^4.40.3",
+    "ws": "^8.18.3",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@types/node": "^22.13.11",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "tsdown": "^0.15.5",
+    "turbo": "^2.5.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
+      "biome check --write ."
+    ]
+  },
+  "packageManager": "pnpm@10.7.1"
+}

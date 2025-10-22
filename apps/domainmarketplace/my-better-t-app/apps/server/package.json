@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "wrangler deploy --dry-run",
+    "check-types": "tsc -b",
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "dev": "wrangler dev --port=3000",
+    "start": "wrangler dev",
+    "test": "tsx --test src/lib/__tests__/**/*.ts",
+    "deploy": "wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.20.0",
+    "@hono/clerk-auth": "^3.0.3",
+    "@my-better-t-app/db": "workspace:*",
+    "dotenv": "catalog:",
+    "hono": "^4.8.2",
+    "stripe": "^17.5.0",
+    "svix": "^1.40.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251011.0",
+    "@types/node": "^22.13.11",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "^4.40.3"
+  }
+}

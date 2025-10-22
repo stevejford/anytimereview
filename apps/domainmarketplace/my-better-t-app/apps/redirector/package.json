@@ -1,0 +1,19 @@
+{
+  "name": "redirector",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run",
+    "clean": "rm -rf dist .wrangler",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20251011.0",
+    "@my-better-t-app/db": "workspace:*",
+    "hono": "^4.8.2",
+    "typescript": "catalog:",
+    "wrangler": "^4.40.3"
+  }
+}
+

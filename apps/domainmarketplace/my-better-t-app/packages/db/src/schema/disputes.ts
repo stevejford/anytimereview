@@ -35,7 +35,7 @@ export const disputes = pgTable("disputes", {
 }, (table) => ({
 	claimantRoleCheck: check(
 		"disputes_claimant_role_check",
-		sql`${table.claimantRole} in ('owner', 'renter', 'hirer')`,
+		sql`${table.claimantRole} in ('owner', 'hirer')`,
 	),
 	statusCheck: check(
 		"disputes_status_check",

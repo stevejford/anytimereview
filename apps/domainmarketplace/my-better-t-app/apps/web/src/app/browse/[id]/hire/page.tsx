@@ -9,13 +9,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RenterCheckoutWizard } from "@/components/wizard/renter-checkout-wizard";
+import { HirerCheckoutWizard } from "@/components/wizard/hirer-checkout-wizard";
 import Breadcrumbs from "@/components/navigation/breadcrumbs";
 import { announceToScreenReader } from "@/lib/accessibility";
 import { isSeedListing } from "@/lib/seed-data";
 import Link from "next/link";
 
-export default function RentDomainPage() {
+export default function HireDomainPage() {
 	const params = useParams();
 	const router = useRouter();
 	const listingId = params?.id as string | undefined;
@@ -31,9 +31,9 @@ export default function RentDomainPage() {
 		enabled: Boolean(listingId) && !isSeedListing(listingId as string),
 	});
 
-	const handleComplete = (rentalId: string) => {
-		announceToScreenReader("Rental created successfully. Redirecting to your rentals dashboard.");
-		router.push("/dashboard/rentals");
+	const handleComplete = (hireId: string) => {
+		announceToScreenReader("Hire created successfully. Redirecting to your hires dashboard.");
+		router.push("/dashboard/hires");
 	};
 
 	// Check if this is a seed listing
@@ -47,7 +47,7 @@ export default function RentDomainPage() {
 						Demo Listing
 					</AlertTitle>
 					<AlertDescription className="text-purple-800 dark:text-purple-200">
-						This is a demo listing. Sign up to browse real domains available for rent.
+						This is a demo listing. Sign up to browse real domains available for hire.
 					</AlertDescription>
 					<div className="mt-4 flex gap-2">
 						<Button asChild>
@@ -105,7 +105,7 @@ export default function RentDomainPage() {
 					<AlertTriangle className="h-4 w-4" />
 					<AlertTitle>Listing not available</AlertTitle>
 					<AlertDescription>
-						This listing is not currently available for rent.
+						This listing is not currently available for hire.
 					</AlertDescription>
 				</Alert>
 			</div>
@@ -115,7 +115,7 @@ export default function RentDomainPage() {
 	return (
 		<div className="container mx-auto max-w-7xl px-4 py-8">
 			<Breadcrumbs />
-			<RenterCheckoutWizard listing={listing} onComplete={handleComplete} />
+			<HirerCheckoutWizard listing={listing} onComplete={handleComplete} />
 		</div>
 	);
 }

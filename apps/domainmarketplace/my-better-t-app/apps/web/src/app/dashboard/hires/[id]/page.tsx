@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
-import { getRental, type Rental } from "@/lib/api-client";
+import { getHire, type Hire } from "@/lib/api-client";
 import { AbuseReportForm } from "@/components/disputes/abuse-report-form";
 import Breadcrumbs from "@/components/navigation/breadcrumbs";
 import {
@@ -35,9 +35,9 @@ function formatDate(value: string | null) {
 	}).format(new Date(value));
 }
 
-export default function RentalDetailPage() {
+export default function HireDetailPage() {
 	const params = useParams();
-	const rentalId = params?.id as string | undefined;
+	const hireId = params?.id as string | undefined;
 	const [isDisputeOpen, setIsDisputeOpen] = React.useState(false);
 
 	const {
@@ -45,10 +45,10 @@ export default function RentalDetailPage() {
 		isLoading,
 		isError,
 		error,
-	} = useQuery<Rental>({
-		queryKey: ["rental", rentalId],
-		queryFn: () => getRental(rentalId!),
-		enabled: Boolean(rentalId),
+	} = useQuery<Hire>({
+		queryKey: ["hire", hireId],
+		queryFn: () => getHire(hireId!),
+		enabled: Boolean(hireId),
 	});
 
 	if (isLoading) {
@@ -70,11 +70,11 @@ export default function RentalDetailPage() {
 		return (
 			<Alert variant="destructive" className="max-w-xl">
 				<AlertTriangle className="h-4 w-4" />
-				<AlertTitle>Unable to load rental</AlertTitle>
+				<AlertTitle>Unable to load hire</AlertTitle>
 				<AlertDescription>
 					{error instanceof Error
 						? error.message
-						: "This rental may not exist or you do not have permission to view it."}
+						: "This hire may not exist or you do not have permission to view it."}
 				</AlertDescription>
 			</Alert>
 		);
@@ -88,12 +88,12 @@ export default function RentalDetailPage() {
 			<Breadcrumbs />
 			<div className="space-y-6">
 				<Button variant="ghost" asChild>
-					<Link href="/dashboard/rentals">← Back to rentals</Link>
+					<Link href="/dashboard/hires">← Back to hires</Link>
 				</Button>
 			<Card>
 				<CardHeader className="flex flex-col gap-2">
-					<CardTitle>Rental Details</CardTitle>
-					<CardDescription>Manage your domain rental lifecycle.</CardDescription>
+					<CardTitle>Hire Details</CardTitle>
+					<CardDescription>Manage your domain hire lifecycle.</CardDescription>
 					<div className="flex flex-wrap items-center gap-2">
 						<Badge variant="secondary" className="capitalize">
 							{data.type === "period" ? "Monthly" : "Per click"}
@@ -142,12 +142,12 @@ export default function RentalDetailPage() {
 				</CardContent>
 				<CardFooter className="flex flex-wrap gap-2">
 					<Button asChild>
-						<Link href={`/dashboard/rentals/${data.id}/routes`}>
+						<Link href={`/dashboard/hires/${data.id}/routes`}>
 							Configure routes
 						</Link>
 					</Button>
 					<Button variant="outline" asChild>
-						<Link href={`/dashboard/rentals/${data.id}/analytics`}>
+						<Link href={`/dashboard/hires/${data.id}/analytics`}>
 							View analytics
 						</Link>
 					</Button>
@@ -155,7 +155,7 @@ export default function RentalDetailPage() {
 						Report Issue
 					</Button>
 					<Button variant="ghost" disabled>
-						Cancel rental (coming soon)
+						Cancel hire (coming soon)
 					</Button>
 				</CardFooter>
 			</Card>
@@ -163,7 +163,7 @@ export default function RentalDetailPage() {
 				<CardHeader>
 					<CardTitle>Route Configuration</CardTitle>
 					<CardDescription>
-						Configure URL redirects for this rental.
+						Configure URL redirects for this hire.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-2">
@@ -174,7 +174,7 @@ export default function RentalDetailPage() {
 				</CardContent>
 				<CardFooter>
 					<Button asChild>
-						<Link href={`/dashboard/rentals/${data.id}/routes`}>
+						<Link href={`/dashboard/hires/${data.id}/routes`}>
 							Configure routes
 						</Link>
 					</Button>
@@ -185,7 +185,7 @@ export default function RentalDetailPage() {
 				<AbuseReportForm
 					isOpen={isDisputeOpen}
 					onOpenChange={setIsDisputeOpen}
-					rental={data}
+					hire={data}
 					onSuccess={() => {
 						setIsDisputeOpen(false);
 						toast.success("Dispute filed successfully");

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { type Rental } from "@/lib/api-client";
+import { type Hire } from "@/lib/api-client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +27,7 @@ function formatDate(value: string | null) {
 	}).format(new Date(value));
 }
 
-export const columns: ColumnDef<Rental>[] = [
+export const columns: ColumnDef<Hire>[] = [
 	{
 		accessorFn: (row) => row.listing?.domain?.fqdn ?? row.listingId,
 		id: "listingLabel",
@@ -42,10 +42,10 @@ export const columns: ColumnDef<Rental>[] = [
 			</Button>
 		),
 		cell: ({ row }) => {
-			const rental = row.original;
-			const fqdn = rental.listing?.domain?.fqdn ?? rental.listingId;
+			const hire = row.original;
+			const fqdn = hire.listing?.domain?.fqdn ?? hire.listingId;
 			return (
-				<Link href={`/browse/${rental.listingId}`} className="font-medium">
+				<Link href={`/browse/${hire.listingId}`} className="font-medium">
 					{fqdn}
 				</Link>
 			);
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Rental>[] = [
 		id: "actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const rental = row.original;
+			const hire = row.original;
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -110,22 +110,22 @@ export const columns: ColumnDef<Rental>[] = [
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 						<DropdownMenuItem asChild>
-							<Link href={`/dashboard/rentals/${rental.id}`}>
+							<Link href={`/dashboard/hires/${hire.id}`}>
 								View details
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
-							<Link href={`/dashboard/rentals/${rental.id}/routes`}>
+							<Link href={`/dashboard/hires/${hire.id}/routes`}>
 								Configure routes
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
-							<Link href={`/dashboard/rentals/${rental.id}/analytics`}>
+							<Link href={`/dashboard/hires/${hire.id}/analytics`}>
 								View analytics
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem disabled>Cancel rental</DropdownMenuItem>
+						<DropdownMenuItem disabled>Cancel hire</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

@@ -7,10 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, ArrowLeft, Activity } from "lucide-react";
 
 import {
-	getRental,
-	getRentalAnalytics,
+	getHire,
+	getHireAnalytics,
 	type AnalyticsResponse,
-	type Rental,
+	type Hire,
 } from "@/lib/api-client";
 import { DateRangePicker, type DateRange } from "@/components/analytics/date-range-picker";
 import { MetricCard } from "@/components/analytics/metric-card";
@@ -155,37 +155,37 @@ function mapBotBreakdown(analytics: AnalyticsResponse): BreakdownRow[] {
 	}));
 }
 
-export default function RentalAnalyticsPage() {
+export default function HireAnalyticsPage() {
 	const params = useParams();
-	const rentalId = params?.id as string | undefined;
+	const hireId = params?.id as string | undefined;
 	const [dateRange, setDateRange] = useState<DateRange>({
 		from: PRESET_RANGES[1].value.from,
 		to: PRESET_RANGES[1].value.to,
 	});
 	const [activeTab, setActiveTab] = useState("geo");
 
-	const rentalQuery = useQuery<Rental>({
-		queryKey: ["rental", rentalId],
-		queryFn: () => getRental(rentalId!),
-		enabled: Boolean(rentalId),
+	const hireQuery = useQuery<Hire>({
+		queryKey: ["hire", hireId],
+		queryFn: () => getHire(hireId!),
+		enabled: Boolean(hireId),
 	});
 
 	const analyticsQuery = useQuery<AnalyticsResponse>({
 		queryKey: [
-			"rental-analytics",
-			rentalId,
+			"hire-analytics",
+			hireId,
 			dateRange.from?.toISOString(),
 			dateRange.to?.toISOString(),
 		],
 		queryFn: () =>
-			getRentalAnalytics(rentalId!, {
+			getHireAnalytics(hireId!, {
 				startDate: toIsoDate(dateRange.from),
 				endDate: toIsoDate(dateRange.to),
 			}),
-		enabled: Boolean(rentalId && dateRange.from && dateRange.to),
+		enabled: Boolean(hireId && dateRange.from && dateRange.to),
 	});
 
-	const rental = rentalQuery.data;
+	const hire = hireQuery.data;
 	const analytics = analyticsQuery.data;
 	const invalidRate = useMemo(
 		() => (analytics ? calculateInvalidRate(analytics.summary) : 0),
@@ -217,16 +217,16 @@ export default function RentalAnalyticsPage() {
 			<div className="space-y-6">
 				<div className="flex flex-wrap items-center justify-between gap-4">
 					<Button variant="ghost" asChild>
-						<Link href={`/dashboard/rentals/${rentalId}`}>
-							<ArrowLeft className="mr-2 h-4 w-4" /> Back to rental
+						<Link href={`/dashboard/hires/${hireId}`}>
+							<ArrowLeft className="mr-2 h-4 w-4" /> Back to hire
 						</Link>
 					</Button>
 				<div className="flex flex-col gap-2 md:flex-row md:items-center">
 					<div className="space-y-1">
 						<h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
-						{rental ? (
+						{hire ? (
 							<p className="text-sm text-muted-foreground">
-								{rental.listing?.domain?.fqdn ?? rental.listingId}
+								{hire.listing?.domain?.fqdn ?? hire.listingId}
 							</p>
 						) : null}
 					</div>
@@ -255,7 +255,7 @@ export default function RentalAnalyticsPage() {
 					<AlertDescription>
 						{analyticsQuery.error instanceof Error
 								? analyticsQuery.error.message
-								: "We couldn't load analytics for this rental. Please try again later."}
+								: "We couldn't load analytics for this hire. Please try again later."}
 					</AlertDescription>
 				</Alert>
 			) : null}
@@ -362,7 +362,7 @@ export default function RentalAnalyticsPage() {
 								</CardDescription>
 							</div>
 							<CsvExportButton
-								filename={`rental-${rentalId}-analytics.csv`}
+								filename={`hire-${hireId}-analytics.csv`}
 								data={csvData}
 								columns={[
 									{ key: "type", label: "type" },
@@ -383,27 +383,8 @@ export default function RentalAnalyticsPage() {
 					<CardHeader>
 						<CardTitle>No analytics available</CardTitle>
 						<CardDescription>
-							No click data has been recorded for this rental within the selected range.
+							No click data has been recorded for this hire within the selected range.
 						</CardDescription>
-					</CardHeader>
-				</Card>
-			) : null}
-
-			{rental ? (
-				<Card>
-					<CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<CardTitle>Rental summary</CardTitle>
-							<CardDescription>
-								Renter analytics for {rental.listing?.domain?.fqdn ?? rental.listingId}
-							</CardDescription>
-						</div>
-						<div className="flex items-center gap-2">
-							<Badge variant="secondary" className="capitalize">
-								{rental.type === "period" ? "Monthly" : "Per click"}
-							</Badge>
-							<Badge className="capitalize">{rental.status}</Badge>
-						</div>
 					</CardHeader>
 				</Card>
 			) : null}

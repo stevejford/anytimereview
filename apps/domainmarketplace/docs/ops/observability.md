@@ -1,4 +1,4 @@
-# Observability — Domain Rental Marketplace
+# Observability — Domain Hire Marketplace
 
 Purpose
 - Provide actionable visibility across the edge redirector (Cloudflare Worker), web app (Next.js on Pages), data (Neon Postgres), billing (Stripe), and onboarding (Cloudflare for SaaS custom hostnames). Tie signals to SLOs and alerts with runbook links.

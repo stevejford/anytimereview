@@ -11,8 +11,8 @@ Verification
 - For agent requests (CCPA), require signed authorization and reasonable verification of the consumer.
 
 Discovery
-- Systems of record: Neon (accounts, listings, rentals, disputes), Stripe (billing), Cloudflare AE (click telemetry), support desk.
-- Use identifiers: email, userId, rentalId. For telemetry, search by userId/rentalId and aggregate visitor data; avoid releasing raw IPs/UAs.
+- Systems of record: Neon (accounts, listings, hires, disputes), Stripe (billing), Cloudflare AE (click telemetry), support desk.
+- Use identifiers: email, userId, hireId. For telemetry, search by userId/hireId and aggregate visitor data; avoid releasing raw IPs/UAs.
 
 Fulfillment Steps
 - Access (copy): Provide a structured report of personal data categories and specific records where feasible; include source, purpose, retention, recipients.

@@ -1,0 +1,54 @@
+warning: in the working copy of 'apps/server/.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/server/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/server/src/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/server/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/server/worker-configuration.d.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/server/wrangler.jsonc', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/web/.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/web/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/web/src/components/header.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/web/src/components/providers.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/web/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/auth/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/auth/src/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/auth/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/analytics.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/auth.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/billing.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/disputes.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/domains.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/listings.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/src/schema/rentals.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/db/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pnpm-lock.yaml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tsconfig.base.json', LF will be replaced by CRLF the next time Git touches it
+apps/server/.env.example
+apps/server/package.json
+apps/server/src/index.ts
+apps/server/tsconfig.json
+apps/server/worker-configuration.d.ts
+apps/server/wrangler.jsonc
+apps/web/.env.example
+apps/web/package.json
+apps/web/src/components/header.tsx
+apps/web/src/components/providers.tsx
+apps/web/tsconfig.json
+package.json
+packages/auth/package.json
+packages/auth/src/index.ts
+packages/auth/tsconfig.json
+packages/db/package.json
+packages/db/src/index.ts
+packages/db/src/schema/analytics.ts
+packages/db/src/schema/auth.ts
+packages/db/src/schema/billing.ts
+packages/db/src/schema/disputes.ts
+packages/db/src/schema/domains.ts
+packages/db/src/schema/listings.ts
+packages/db/src/schema/rentals.ts
+packages/db/tsconfig.json
+pnpm-lock.yaml
+tsconfig.base.json

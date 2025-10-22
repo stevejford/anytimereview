@@ -415,7 +415,7 @@ router.post("/clerk", async (c) => {
 			const firstName = clerkUser.first_name || "";
 			const lastName = clerkUser.last_name || "";
 			const fullName = `${firstName} ${lastName}`.trim() || primaryEmail.email_address;
-			const role = (clerkUser.public_metadata?.role as string) || "renter";
+			const role = (clerkUser.public_metadata?.role as string) || "hirer";
 
 			// Upsert user into local database
 			await db

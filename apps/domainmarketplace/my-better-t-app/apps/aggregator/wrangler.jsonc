@@ -1,0 +1,19 @@
+{
+  // Cloudflare Worker configuration for the analytics aggregation cron
+  "name": "my-better-t-app-aggregator",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "triggers": {
+    // Runs daily at 1:00 AM UTC to aggregate the prior day's click events
+    "crons": ["0 1 * * *"]
+  },
+  "analytics_engine_datasets": [
+    {
+      "binding": "CLICKS_AE",
+      "dataset": "clicks"
+    }
+  ]
+}
+
+

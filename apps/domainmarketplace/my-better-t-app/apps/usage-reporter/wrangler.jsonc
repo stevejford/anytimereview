@@ -1,0 +1,19 @@
+{
+  "name": "usage-reporter",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-10",
+  "compatibility_flags": ["nodejs_compat"],
+  "triggers": {
+    "crons": ["0 2 * * *"]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "STRIPE_PLATFORM_FEE_PERCENT": "4"
+  }
+  // Secrets (set with wrangler secret put):
+  // - DATABASE_URL: PostgreSQL connection string
+  // - STRIPE_SECRET_KEY: Stripe API key
+}
+

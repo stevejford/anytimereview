@@ -105,19 +105,19 @@ router.post("/period/checkout", requireAuth, async (c) => {
 			}, 409);
 		}
 
-		const [renterRecord] = await db
+		const [hirerRecord] = await db
 			.select()
 			.from(users)
 			.where(eq(users.id, user.id))
 			.limit(1);
 
-		if (!renterRecord || !renterRecord.email) {
-			return c.json({ error: "Unable to resolve renter profile" }, 400);
+		if (!hirerRecord || !hirerRecord.email) {
+			return c.json({ error: "Unable to resolve hirer profile" }, 400);
 		}
 
 		let customerId = row.hire.stripeCustomerId;
 		if (!customerId) {
-			customerId = await createOrGetCustomer(stripe, renterRecord.email, renterRecord.id, {
+			customerId = await createOrGetCustomer(stripe, hirerRecord.email, hirerRecord.id, {
 				hireId,
 			});
 			await db
@@ -262,7 +262,7 @@ router.post("/usage/report", async (c) => {
 			.values({
 				hireId,
 				subscriptionItemId: hire.stripeSubscriptionItemId,
-				day, // day is already a string in YYYY-MM-DD format
+				day: asDate, // Convert to Date for the date column
 				clicksSent: clicks,
 				idempotencyKey,
 				sentAt: new Date(),

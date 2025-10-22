@@ -1,0 +1,51 @@
+{
+  "name": "my-better-t-app-redirector",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "example.com/*",
+      "zone_id": "<ZONE_ID>"
+    }
+  ],
+  "vars": {
+    "VERIFIED_BOT_ALLOWLIST": "Google,Bing,LinkedIn,Twitter,Applebot,Baidu,Slackbot"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "ROUTES_KV",
+      "id": "<ROUTES_KV_NAMESPACE_ID>"
+    }
+  ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "CLICKS_AE",
+      "dataset": "clicks"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ROUTE_COORDINATOR",
+        "class_name": "RouteCoordinator"
+      },
+      {
+        "name": "CLICK_DEDUPLICATOR",
+        "class_name": "ClickDeduplicator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["RouteCoordinator"]
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["ClickDeduplicator"]
+    }
+  ]
+}
+
+

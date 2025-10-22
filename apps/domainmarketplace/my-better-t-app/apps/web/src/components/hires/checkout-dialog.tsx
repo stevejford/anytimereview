@@ -35,14 +35,14 @@ import {
 } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import {
-	createRental,
-	type CreateRentalRequest,
+	createHire,
+	type CreateHireRequest,
 	type Listing,
 } from "@/lib/api-client";
 
 const schema = z.object({
 	type: z.enum(["period", "per_click"], {
-		message: "Please select a rental type",
+		message: "Please select a hire type",
 	}),
 });
 
@@ -52,7 +52,7 @@ interface CheckoutDialogProps {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 	listing: Listing;
-	onSuccess: (rentalId: string, rentalType: "period" | "per_click") => void;
+	onSuccess: (hireId: string, hireType: "period" | "per_click") => void;
 }
 
 function formatCurrency(cents: number | null) {
@@ -92,14 +92,14 @@ export default function CheckoutDialog({
 		setIsSubmitting(true);
 		setError(null);
 
-		const payload: CreateRentalRequest = {
+		const payload: CreateHireRequest = {
 			listingId: listing.id,
 			type: values.type,
 		};
 
 		try {
-			const rental = await createRental(payload);
-			onSuccess(rental.id, values.type);
+			const hire = await createHire(payload);
+			onSuccess(hire.id, values.type);
 			onOpenChange(false);
 			setStep(1);
 			form.reset();
@@ -107,7 +107,7 @@ export default function CheckoutDialog({
 			if (err instanceof Error) {
 				setError(err.message);
 			} else {
-				setError("Unable to create rental. Please try again.");
+				setError("Unable to create hire. Please try again.");
 			}
 		} finally {
 			setIsSubmitting(false);
@@ -127,14 +127,14 @@ export default function CheckoutDialog({
 		>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Rent {listing.domainId}</DialogTitle>
+					<DialogTitle>Hire {listing.domainId}</DialogTitle>
 					<DialogDescription>
-						Select a rental plan to get started. Payment integration is coming soon.
+						Select a hire plan to get started. Payment integration is coming soon.
 					</DialogDescription>
 				</DialogHeader>
 				{error ? (
 					<Alert variant="destructive">
-						<AlertTitle>Unable to create rental</AlertTitle>
+						<AlertTitle>Unable to create hire</AlertTitle>
 						<AlertDescription>{error}</AlertDescription>
 					</Alert>
 				) : null}
@@ -146,7 +146,7 @@ export default function CheckoutDialog({
 								name="type"
 								render={({ field }) => (
 									<FormItem className="space-y-4">
-										<FormLabel>Select rental type</FormLabel>
+										<FormLabel>Select hire type</FormLabel>
 										<FormControl>
 											<RadioGroup
 												onValueChange={field.onChange}
@@ -165,7 +165,7 @@ export default function CheckoutDialog({
 												>
 													<CardHeader>
 														<CardTitle className="flex items-center justify-between text-base">
-															<span>Monthly rental</span>
+															<span>Monthly hire</span>
 															{selectedType === "period" && (
 																<Badge>Selected</Badge>
 															)}
@@ -226,7 +226,7 @@ export default function CheckoutDialog({
 				) : (
 					<Card>
 						<CardHeader>
-							<CardTitle>Confirm rental</CardTitle>
+							<CardTitle>Confirm hire</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-4 text-sm">
 							<div className="flex items-center justify-between">
@@ -234,7 +234,7 @@ export default function CheckoutDialog({
 								<span className="font-medium">{listing.domainId}</span>
 							</div>
 							<div className="flex items-center justify-between">
-								<span>Rental type</span>
+								<span>Hire type</span>
 								<span className="capitalize">
 									{selectedType === "period" ? "Monthly" : "Per click"}
 								</span>
@@ -283,7 +283,7 @@ export default function CheckoutDialog({
 								disabled={isSubmitting}
 						>
 								{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-								Confirm rental
+								Confirm hire
 							</Button>
 						</>
 					)}
