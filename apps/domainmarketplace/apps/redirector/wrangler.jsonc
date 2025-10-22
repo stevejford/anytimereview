@@ -1,0 +1,38 @@
+{
+  // Cloudflare Worker deployment configuration for the redirector edge worker.
+  "name": "my-better-t-app-redirector",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    // Use `wrangler secret put DATABASE_URL` in production to avoid committing secrets.
+    "DATABASE_URL": ""
+  },
+  "kv_namespaces": [
+    {
+      "binding": "ROUTES_KV",
+      "id": "<KV_NAMESPACE_ID>"
+    }
+  ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "CLICKS_AE",
+      "dataset": "clicks"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ROUTE_COORDINATOR",
+        "class_name": "RouteCoordinator",
+        "script_name": "my-better-t-app-redirector"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["RouteCoordinator"]
+    }
+  ]
+}

@@ -1,0 +1,447 @@
+openapi: 3.1.0
+info:
+  title: Domain Rental Marketplace API (MVP)
+  version: 0.1.0
+  description: |
+    MVP endpoints for domains, listings, rentals, routes, analytics, and billing.
+    Auth via Bearer JWT/session. Stripe webhooks verified by signature.
+servers:
+  - url: https://api.example.com
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    Domain:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        fqdn: { type: string }
+        verificationStatus: { type: string, enum: [pending, verified, failed] }
+        verificationMethod:
+          type: string
+          enum: [cf_saas, domain_connect, manual]
+          nullable: true
+        verifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        cnameTarget:
+          type: string
+          nullable: true
+      required:
+        - id
+        - fqdn
+        - verificationStatus
+    Listing:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        domainId: { type: string, format: uuid }
+        mode: { type: string, enum: [exclusive, shared_slugs] }
+        pricePeriodCents: { type: integer, nullable: true }
+        priceClickCents: { type: integer, nullable: true }
+        status: { type: string, enum: [draft, active, paused] }
+    Rental:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        listingId: { type: string, format: uuid }
+        renterId: { type: string, format: uuid }
+        type: { type: string, enum: [period, per_click] }
+        status: { type: string, enum: [active, ended, suspended] }
+    Route:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        rentalId: { type: string, format: uuid }
+        host: { type: string }
+        path: { type: string }
+        targetUrl: { type: string, format: uri }
+        redirectCode: { type: integer, enum: [301, 302, 307, 308] }
+    AnalyticsSummary:
+      type: object
+      properties:
+        validClicks: { type: integer }
+        invalidClicks: { type: integer }
+        byGeo:
+          type: array
+          items: { type: object, properties: { country: { type: string }, count: { type: integer } } }
+paths:
+  /api/v1/domains:
+    post:
+      summary: Create domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fqdn]
+              properties:
+                fqdn: { type: string }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Domain' } } } }
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+  /api/v1/domains/{id}:
+    get:
+      summary: Get domain
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Domain' } } } }
+        '404': { description: Not Found }
+  /api/v1/domains/{id}/verify:
+    post:
+      summary: Verify domain control
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [method]
+              properties:
+                method: { type: string, enum: [cf_saas, domain_connect, manual] }
+                returnUrl: { type: string, nullable: true, format: uri }
+      responses:
+        '202':
+          description: Verification started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verificationMethod:
+                    type: string
+                    enum: [cf_saas, domain_connect, manual]
+                    nullable: true
+                  verificationStatus:
+                    type: string
+                    enum: [pending, verified, failed]
+                  txtRecord:
+                    type: object
+                    nullable: true
+                    properties:
+                      name: { type: string }
+                      value: { type: string }
+                  httpToken:
+                    type: object
+                    nullable: true
+                    properties:
+                      url: { type: string, format: uri }
+                      body: { type: string }
+                  redirectUrl:
+                    type: string
+                    format: uri
+                    nullable: true
+                  instructions:
+                    type: object
+                    nullable: true
+                    properties:
+                      type: { type: string }
+                      cnameTarget: { type: string }
+        '200':
+          description: Verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verificationMethod:
+                    type: string
+                    enum: [cf_saas, domain_connect, manual]
+                    nullable: true
+                  verificationStatus:
+                    type: string
+                    enum: [pending, verified, failed]
+        '400': { description: Bad Request }
+  /api/v1/domains/{id}/status:
+    get:
+      summary: Get domain verification status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Domain' } } } }
+        '404': { description: Not Found }
+  /api/listings:
+    get:
+      summary: Search listings
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Listing' }
+    post:
+      summary: Create listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [domainId, mode]
+              properties:
+                domainId: { type: string }
+                mode: { type: string, enum: [exclusive, shared_slugs] }
+                pricePeriodCents: { type: integer, nullable: true }
+                priceClickCents: { type: integer, nullable: true }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Listing' } } } }
+  /api/listings/{id}:
+    get:
+      summary: Get listing
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Listing' } } } }
+        '404': { description: Not Found }
+    patch:
+      summary: Update listing status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string, enum: [draft, active, paused] }
+      responses:
+        '200': { description: OK }
+  /api/rentals:
+    post:
+      summary: Create rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [listingId, type]
+              properties:
+                listingId: { type: string }
+                type: { type: string, enum: [period, per_click] }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Rental' } } } }
+  /api/rentals/{id}:
+    get:
+      summary: Get rental
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Rental' } } } }
+        '404': { description: Not Found }
+  /api/rentals/{id}/routes:
+    get:
+      summary: List routes for rental
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Route' }
+    post:
+      summary: Add route to rental
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [host, path, targetUrl, redirectCode]
+              properties:
+                host: { type: string }
+                path: { type: string, pattern: "^(\\/[^?#]*)?$" }
+                targetUrl: { type: string, format: uri }
+                redirectCode: { type: integer, enum: [301, 302, 307, 308] }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/Route' } } } }
+  /api/rentals/{id}/routes/{routeId}:
+    patch:
+      summary: Update rental route
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: path
+          name: routeId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                host: { type: string }
+                path: { type: string, pattern: "^(\\/[^?#]*)?$" }
+                targetUrl: { type: string, format: uri }
+                redirectCode: { type: integer, enum: [301, 302, 307, 308] }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/Route' } } } }
+    delete:
+      summary: Delete rental route
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: path
+          name: routeId
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: No Content }
+  /api/rentals/{id}/routes/bulk:
+    post:
+      summary: Bulk create rental routes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required: [host, path, targetUrl, redirectCode]
+                properties:
+                  host: { type: string }
+                  path: { type: string, pattern: "^(\\/[^?#]*)?$" }
+                  targetUrl: { type: string, format: uri }
+                  redirectCode: { type: integer, enum: [301, 302, 307, 308] }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created:
+                    type: array
+                    items: { $ref: '#/components/schemas/Route' }
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index: { type: integer }
+                        errors:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              field: { type: string }
+                              message: { type: string }
+                  summary:
+                    type: object
+                    properties:
+                      total: { type: integer }
+                      created: { type: integer }
+                      failed: { type: integer }
+  /api/rentals/{id}/analytics:
+    get:
+      summary: Analytics summary
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: range
+          schema: { type: string, example: '30d' }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/AnalyticsSummary' } } } }
+  /api/billing/period/checkout:
+    post:
+      summary: Start period rental checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rentalId]
+              properties:
+                rentalId: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/billing/usage/report:
+    post:
+      summary: Report usage (internal)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rentalId, clicks]
+              properties:
+                rentalId: { type: string }
+                clicks: { type: integer }
+      responses:
+        '202': { description: Accepted }
+  /api/webhooks/stripe:
+    post:
+      summary: Stripe webhook
+      security: []
+      responses:
+        '200': { description: OK }
+

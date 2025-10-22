@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1760804919384,
+      "tag": "0000_worthless_the_hunter",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760804920000,
+      "tag": "0001_add_stripe_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760804921000,
+      "tag": "0002_add_stripe_reference_id_to_disputes",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1760804922000,
+      "tag": "0003_add_user_moderation_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1760804923000,
+      "tag": "0004_migrate_to_clerk",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1729607400000,
+      "tag": "0005_rename_rentals_to_hires",
+      "breakpoints": true
+    }
+  ]
+}

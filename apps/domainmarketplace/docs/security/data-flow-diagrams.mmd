@@ -1,0 +1,27 @@
+flowchart LR
+  subgraph Client
+    User
+    Visitor
+  end
+  subgraph Platform
+    Web[Next.js]
+    Edge[CF Worker]
+    KV[(Workers KV)]
+    AE[(Analytics Engine)]
+    DB[(Neon Postgres)]
+  end
+  subgraph Processors
+    Stripe[Stripe]
+  end
+
+  User -->|Auth| Web
+  Web -->|CRUD| DB
+  Visitor -->|GET domain/slug| Edge
+  Edge -->|KV lookup| KV
+  Edge -->|Write event| AE
+  Web -->|SQL| AE
+  Web -->|Billing| Stripe
+
+%% Webhooks flow
+  Stripe -->|webhooks (signed)| Web
+
