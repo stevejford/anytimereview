@@ -13,9 +13,9 @@ import { toast } from "sonner";
 
 import {
   deleteRoute,
-  getRental,
+  getHire,
   getRoutes,
-  type Rental,
+  type Hire,
   type Route,
 } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
@@ -39,30 +39,30 @@ import { announceToScreenReader } from "@/lib/accessibility";
 
 export default function RoutesPage() {
   const params = useParams();
-  const rentalId = params?.id as string | undefined;
+  const hireId = params?.id as string | undefined;
   const queryClient = useQueryClient();
 
   const [isRouteDialogOpen, setIsRouteDialogOpen] = useState(false);
   const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
 
-  const rentalQuery = useQuery<Rental>({
-    queryKey: ["rental", rentalId],
-    queryFn: () => getRental(rentalId!),
-    enabled: Boolean(rentalId),
+  const hireQuery = useQuery<Hire>({
+    queryKey: ["hire", hireId],
+    queryFn: () => getHire(hireId!),
+    enabled: Boolean(hireId),
   });
 
   const routesQuery = useQuery<Route[]>({
-    queryKey: ["routes", rentalId],
-    queryFn: () => getRoutes(rentalId!),
-    enabled: Boolean(rentalId),
+    queryKey: ["routes", hireId],
+    queryFn: () => getRoutes(hireId!),
+    enabled: Boolean(hireId),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ rentalId, routeId }: { rentalId: string; routeId: string }) =>
-      deleteRoute(rentalId, routeId),
+    mutationFn: ({ hireId, routeId }: { hireId: string; routeId: string }) =>
+      deleteRoute(hireId, routeId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["routes", rentalId] });
+      await queryClient.invalidateQueries({ queryKey: ["routes", hireId] });
       toast.success("Route deleted");
       announceToScreenReader("Route deleted successfully");
     },
@@ -87,24 +87,24 @@ export default function RoutesPage() {
     const confirmed = window.confirm(
       `Delete route ${route.host}${route.path}? This action cannot be undone.`,
     );
-    if (!confirmed || !rentalId) return;
-    deleteMutation.mutate({ rentalId, routeId: route.id });
+    if (!confirmed || !hireId) return;
+    deleteMutation.mutate({ hireId, routeId: route.id });
   };
 
   const handleRouteSaved = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["routes", rentalId] });
+    await queryClient.invalidateQueries({ queryKey: ["routes", hireId] });
     setSelectedRoute(null);
     toast.success("Route saved");
     announceToScreenReader("Route configuration saved successfully");
   };
 
   const handleBulkSuccess = async (count: number) => {
-    await queryClient.invalidateQueries({ queryKey: ["routes", rentalId] });
+    await queryClient.invalidateQueries({ queryKey: ["routes", hireId] });
     toast.success(`Created ${count} routes`);
     setIsBulkDialogOpen(false);
   };
 
-  if (rentalQuery.isLoading || routesQuery.isLoading) {
+  if (hireQuery.isLoading || routesQuery.isLoading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-64" />
@@ -114,10 +114,10 @@ export default function RoutesPage() {
     );
   }
 
-  if (rentalQuery.isError || !rentalQuery.data) {
-    const message = rentalQuery.error instanceof Error
-      ? rentalQuery.error.message
-      : "Unable to load rental";
+  if (hireQuery.isError || !hireQuery.data) {
+    const message = hireQuery.error instanceof Error
+      ? hireQuery.error.message
+      : "Unable to load hire";
 
     return (
       <Alert variant="destructive">
@@ -127,17 +127,17 @@ export default function RoutesPage() {
     );
   }
 
-  const rental = rentalQuery.data;
+  const hire = hireQuery.data;
   const routes = routesQuery.data ?? [];
-  const fqdn = rental.listing?.domain?.fqdn ?? "this domain";
+  const fqdn = hire.listing?.domain?.fqdn ?? "this domain";
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       <Breadcrumbs />
       <div className="space-y-6">
         <Button variant="ghost" asChild>
-          <Link href={`/dashboard/rentals/${rental.id}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to rental
+          <Link href={`/dashboard/hires/${hire.id}`}>
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to hire
           </Link>
         </Button>
 
@@ -146,7 +146,7 @@ export default function RoutesPage() {
           <h1 className="text-3xl font-semibold tracking-tight">Route configuration</h1>
           <p className="text-muted-foreground">
             Manage redirects for {fqdn}. Routes determine where visitors are sent when
-            they load your rental domain.
+            they load your hire domain.
           </p>
         </div>
         <div className="flex gap-2">
@@ -176,7 +176,7 @@ export default function RoutesPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="space-y-1">
             <CardTitle>Routes</CardTitle>
-            <CardDescription>All configured redirects for this rental.</CardDescription>
+            <CardDescription>All configured redirects for this hire.</CardDescription>
           </div>
           <Badge variant="secondary">{routes.length} configured</Badge>
         </CardHeader>
@@ -185,11 +185,11 @@ export default function RoutesPage() {
             columns={columns}
             data={routes}
             meta={{
-              rentalId,
+              hireId,
               onEdit: handleEdit,
               onDelete: handleDelete,
               onRouteUpdated: (updatedRoute) => {
-                queryClient.setQueryData<Route[]>(["routes", rentalId], (previous) => {
+                queryClient.setQueryData<Route[]>(["routes", hireId], (previous) => {
                   if (!previous) return previous;
                   return previous.map((current) =>
                     current.id === updatedRoute.id ? updatedRoute : current,
@@ -209,9 +209,9 @@ export default function RoutesPage() {
         </CardFooter>
       </Card>
 
-      {rentalId && (
+      {hireId && (
         <RouteDialog
-          rentalId={rentalId}
+          hireId={hireId}
           isOpen={isRouteDialogOpen}
           onOpenChange={(open) => {
             setIsRouteDialogOpen(open);
@@ -224,9 +224,9 @@ export default function RoutesPage() {
         />
       )}
 
-      {rentalId && (
+      {hireId && (
         <BulkUploadDialog
-          rentalId={rentalId}
+          hireId={hireId}
           isOpen={isBulkDialogOpen}
           onOpenChange={setIsBulkDialogOpen}
           onSuccess={handleBulkSuccess}
