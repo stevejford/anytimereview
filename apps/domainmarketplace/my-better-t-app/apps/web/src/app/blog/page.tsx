@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Breadcrumbs from "@/components/navigation/breadcrumbs";
 
 export const metadata: Metadata = {
-	title: "Blog",
+	title: "Blog - HireADomain",
+	description: "News, updates, and insights from the HireADomain team.",
 	robots: "noindex",
 };
 

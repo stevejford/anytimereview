@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "Terms of Service - HireADomain",
+	description: "Terms of Service for HireADomain marketplace. Review our policies and conditions for using our platform.",
+};
 
 export default function TermsPage() {
 	return (

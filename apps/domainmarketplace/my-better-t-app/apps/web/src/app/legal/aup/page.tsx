@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "Acceptable Use Policy - HireADomain",
+	description: "Acceptable Use Policy for HireADomain. Guidelines for responsible use of our platform.",
+};
 
 export default function AUPPage() {
 	return (

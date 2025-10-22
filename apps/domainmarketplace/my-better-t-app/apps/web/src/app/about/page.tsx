@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Target, Shield, Zap, HeartHandshake } from "lucide-react";
+
+export const metadata: Metadata = {
+	title: "About - HireADomain",
+	description: "Learn about HireADomain, the secure marketplace connecting domain owners with marketers for flexible domain hires.",
+};
 
 export default function AboutPage() {
 	return (

@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Breadcrumbs from "@/components/navigation/breadcrumbs";
 
 export const metadata: Metadata = {
-	title: "DMCA Policy",
-	description: "Digital Millennium Copyright Act policy and procedures",
+	title: "DMCA Policy - HireADomain",
+	description: "DMCA Policy for HireADomain. Digital Millennium Copyright Act policy and procedures for reporting copyright infringement.",
 };
 
 export default function DMCAPage() {

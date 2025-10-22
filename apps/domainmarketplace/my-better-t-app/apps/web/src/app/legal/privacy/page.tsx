@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "Privacy Policy - HireADomain",
+	description: "Privacy Policy for HireADomain. Learn how we collect, use, and protect your personal information.",
+};
 
 export default function PrivacyPage() {
 	return (
