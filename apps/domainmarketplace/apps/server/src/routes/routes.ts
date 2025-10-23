@@ -4,10 +4,10 @@ import { z } from "zod";
 
 import { db, desc, eq } from "@my-better-t-app/db";
 import {
-	rentals,
+	hires,
 	routes,
 	type Route as RouteModel,
-} from "@my-better-t-app/db/schema/rentals";
+} from "@my-better-t-app/db/schema/hires";
 
 import {
 	authMiddleware,
@@ -74,7 +74,7 @@ const bulkRouteSchema = z.array(createRouteSchema).max(1000);
 
 type RouteResponse = {
   id: string;
-  rentalId: string;
+  hireId: string;
   host: string;
   path: string;
   targetUrl: string;
@@ -86,7 +86,7 @@ type RouteResponse = {
 function toResponse(route: RouteModel): RouteResponse {
   return {
     id: route.id,
-    rentalId: route.rentalId,
+    hireId: route.hireId,
     host: route.host,
     path: route.path,
     targetUrl: route.targetUrl,
@@ -96,47 +96,47 @@ function toResponse(route: RouteModel): RouteResponse {
   };
 }
 
-async function ensureRentalOwnership(rentalId: string, userId: string) {
-  const rental = await db.query.rentals.findFirst({
-    where: eq(rentals.id, rentalId),
+async function ensureHireOwnership(hireId: string, userId: string) {
+  const hire = await db.query.hires.findFirst({
+    where: eq(hires.id, hireId),
     with: {
       listing: true,
     },
   });
 
-  if (!rental) {
-    throw new HTTPException(404, { message: "Rental not found" });
+  if (!hire) {
+    throw new HTTPException(404, { message: "Hire not found" });
   }
 
-  if (rental.renterId !== userId) {
+  if (hire.hirerId !== userId) {
     throw new HTTPException(403, {
-      message: "You do not have permission to access this rental",
+      message: "You do not have permission to access this hire",
     });
   }
 
-  return rental;
+  return hire;
 }
 
 router.use("/*", requireAuth);
 
-router.get("/:rentalId/routes", async (c) => {
+router.get("/:hireId/routes", async (c) => {
 	const user = c.get("user");
-	const { rentalId } = c.req.param();
+	const { hireId } = c.req.param();
 
-	await ensureRentalOwnership(rentalId, user.id);
+	await ensureHireOwnership(hireId, user.id);
 
-	const rentalRoutes = await db
+	const hireRoutes = await db
 		.select()
 		.from(routes)
-		.where(eq(routes.rentalId, rentalId))
+		.where(eq(routes.hireId, hireId))
 		.orderBy(desc(routes.createdAt));
 
-	return c.json(rentalRoutes.map((route) => toResponse(route)));
+	return c.json(hireRoutes.map((route) => toResponse(route)));
 });
 
-router.post("/:rentalId/routes", async (c) => {
+router.post("/:hireId/routes", async (c) => {
 	const user = c.get("user");
-	const { rentalId } = c.req.param();
+	const { hireId } = c.req.param();
 	const body = await c.req.json();
 
 	const parsed = createRouteSchema.parse(body);
@@ -167,10 +167,10 @@ router.post("/:rentalId/routes", async (c) => {
 		redirectCode,
 	};
 
-	await ensureRentalOwnership(rentalId, user.id);
+	await ensureHireOwnership(hireId, user.id);
 
 	const conflict = await checkRouteConflict(
-		rentalId,
+		hireId,
 		normalizedHost,
 		normalizedPath,
 	);
@@ -183,7 +183,7 @@ router.post("/:rentalId/routes", async (c) => {
 
 	const [createdRoute] = await db
 		.insert(routes)
-		.values({ rentalId, ...payload })
+		.values({ hireId, ...payload })
 		.returning();
 
 	const coordinatorId = c.env.ROUTE_COORDINATOR.idFromName("global");
@@ -200,17 +200,17 @@ router.post("/:rentalId/routes", async (c) => {
 	return c.json(toResponse(createdRoute), 201);
 });
 
-router.patch("/:rentalId/routes/:routeId", async (c) => {
+router.patch("/:hireId/routes/:routeId", async (c) => {
 	const user = c.get("user");
-	const { rentalId, routeId } = c.req.param();
+	const { hireId, routeId } = c.req.param();
 	const body = await c.req.json();
 	const payload = updateRouteSchema.parse(body);
 
-	await ensureRentalOwnership(rentalId, user.id);
+	await ensureHireOwnership(hireId, user.id);
 
 	const existingRoute = await db.query.routes.findFirst({
 		where: (route, { eq }) =>
-			eq(route.id, routeId) && eq(route.rentalId, rentalId),
+			eq(route.id, routeId) && eq(route.hireId, hireId),
 	});
 
 	if (!existingRoute) {
@@ -243,7 +243,7 @@ router.patch("/:rentalId/routes/:routeId", async (c) => {
 
 	if (nextHost !== existingRoute.host || nextPath !== existingRoute.path) {
 		const conflict = await checkRouteConflict(
-			rentalId,
+			hireId,
 			nextHost,
 			nextPath,
 			routeId,
@@ -279,7 +279,7 @@ router.patch("/:rentalId/routes/:routeId", async (c) => {
 		await coordinatorStub.syncRoute(updatedRoute.id, {
 			host: existingRoute.host,
 			path: existingRoute.path,
-			rentalId: rentalId,
+			hireId: hireId,
 		});
 	} catch (error) {
 		console.error("route.syncRoute.failed", {
@@ -289,7 +289,7 @@ router.patch("/:rentalId/routes/:routeId", async (c) => {
 	}
 
 	try {
-		await coordinatorStub.invalidateRoute(existingRoute.host, existingRoute.path, rentalId, routeId);
+		await coordinatorStub.invalidateRoute(existingRoute.host, existingRoute.path, hireId, routeId);
 	} catch (error) {
 		console.error("route.invalidateRoute.failed", {
 			routeId,
@@ -300,15 +300,15 @@ router.patch("/:rentalId/routes/:routeId", async (c) => {
 	return c.json(toResponse(updatedRoute));
 });
 
-router.delete("/:rentalId/routes/:routeId", async (c) => {
+router.delete("/:hireId/routes/:routeId", async (c) => {
 	const user = c.get("user");
-	const { rentalId, routeId } = c.req.param();
+	const { hireId, routeId } = c.req.param();
 
-	await ensureRentalOwnership(rentalId, user.id);
+	await ensureHireOwnership(hireId, user.id);
 
 	const existingRoute = await db.query.routes.findFirst({
 		where: (route, { eq }) =>
-			eq(route.id, routeId) && eq(route.rentalId, rentalId),
+			eq(route.id, routeId) && eq(route.hireId, hireId),
 	});
 
 	if (!existingRoute) {
@@ -320,7 +320,7 @@ router.delete("/:rentalId/routes/:routeId", async (c) => {
 	const coordinatorId = c.env.ROUTE_COORDINATOR.idFromName("global");
 	const coordinatorStub = c.env.ROUTE_COORDINATOR.get(coordinatorId) as unknown as RouteCoordinatorStub;
 	try {
-		await coordinatorStub.invalidateRoute(existingRoute.host, existingRoute.path, rentalId, routeId);
+		await coordinatorStub.invalidateRoute(existingRoute.host, existingRoute.path, hireId, routeId);
 	} catch (error) {
 		console.error("route.invalidateRoute.failed", {
 			routeId,
@@ -331,13 +331,13 @@ router.delete("/:rentalId/routes/:routeId", async (c) => {
 	return c.body(null, 204);
 });
 
-router.post("/:rentalId/routes/bulk", async (c) => {
+router.post("/:hireId/routes/bulk", async (c) => {
 	const user = c.get("user");
-	const { rentalId } = c.req.param();
+	const { hireId } = c.req.param();
   const body = await c.req.json();
   const payload = bulkRouteSchema.parse(body);
 
-	await ensureRentalOwnership(rentalId, user.id);
+	await ensureHireOwnership(hireId, user.id);
 
   const errors: Array<{
     index: number;
@@ -379,7 +379,7 @@ router.post("/:rentalId/routes/bulk", async (c) => {
     }
 
     const conflict = await checkRouteConflict(
-      rentalId,
+      hireId,
       route.host,
       normalizedPath,
     );
@@ -398,7 +398,7 @@ router.post("/:rentalId/routes/bulk", async (c) => {
     }
 
     validRoutes.push({
-      rentalId,
+      hireId,
       host: route.host,
       path: normalizedPath,
       targetUrl: normalizedUrl,

@@ -1,5 +1,5 @@
 import { db, eq } from "@my-better-t-app/db";
-import { routes } from "@my-better-t-app/db/schema/rentals";
+import { routes } from "@my-better-t-app/db/schema/hires";
 
 const REDIRECT_CODES = new Set([301, 302, 307, 308]);
 
@@ -10,7 +10,7 @@ export function normalizeRouteHost(host: string): string {
 }
 
 export async function checkRouteConflict(
-	rentalId: string,
+	hireId: string,
 	host: string,
 	path: string,
 	excludeRouteId?: string,
@@ -20,7 +20,7 @@ export async function checkRouteConflict(
 	const conflict = await db.query.routes.findFirst({
 		where: (route, { and, eq, ne }) =>
 			and(
-				eq(route.rentalId, rentalId),
+				eq(route.hireId, hireId),
 				eq(route.host, normalizedHost),
 				eq(route.path, normalizedPath),
 				excludeRouteId ? ne(route.id, excludeRouteId) : undefined,
