@@ -1,0 +1,23 @@
+{
+  "name": "redis-proxy",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsdown",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@my-better-t-app/redis": "workspace:*",
+    "dotenv": "^16.4.5",
+    "hono": "^4.8.2"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:",
+    "tsx": "^4.19.2",
+    "typescript": "catalog:"
+  }
+}
+
